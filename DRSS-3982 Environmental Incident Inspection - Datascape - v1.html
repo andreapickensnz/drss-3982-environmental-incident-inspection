@@ -1355,6 +1355,12 @@ body.record .section-head { font-size: 13px; padding-top: 8px; border-bottom: 0;
 body.record .part-head .toggle, body.record .section-head .toggle { font-size: 12px; font-weight: 700; color: var(--shallow-blue); }
 body.record .add { color: #5c5f5c; border: 1px solid #c9c9c9; border-radius: 4px; min-height: 32px; padding: 0 12px; background: linear-gradient(#fbfbfc, #f0f0f2); font-size: 12px; font-weight: 700; }
 body.record .add .add-icon { font-size: 16px; line-height: 1; font-weight: 400; }
+.surface-desk .field[data-field-id="warrantContact"] .control,
+.surface-desk .field[data-field-id="contactSearch"] .control,
+.surface-desk .field[data-field-id="warrantName"] > input,
+.surface-desk .field[data-field-id="requiredAction"] > textarea {
+	background: var(--field-bg);
+}
 @media (min-width: 721px) {
 	body.record .surface-desk:not(.single-column) .part-body,
 	body.record .surface-desk:not(.single-column) .section-body,
@@ -2904,6 +2910,7 @@ window.ENVINCIDENT_SURVEY = {
 
 	function buildField(field, scope) {
 		const wrap = el("div", `field field-${field.type}`);
+		wrap.dataset.fieldId = field.id;
 		// A heading is the platform's Label element: read-only text, no input beside it.
 		if (field.type === "heading") {
 			const ask = engineeringBox(field);
