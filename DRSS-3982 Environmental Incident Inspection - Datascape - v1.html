@@ -712,9 +712,9 @@ body.spec-off .repeater-head { margin-bottom: 2px; }
 .ds-clear { position: absolute; right: 25px; top: 0; bottom: 0; border: 0; background: transparent; color: #626568; cursor: pointer; }
 .ds-media { min-width: 0; }
 .ds-media-list { display: grid; gap: 8px; margin-bottom: 10px; }
-.ds-media-row { display: grid; grid-template-columns: minmax(180px, 267px) minmax(0, 1fr) 52px; gap: 30px; padding: 16px 24px; border: 1px solid #d4d4d6; background: #fcfcfc; min-height: 336px; }
-.ds-media-preview { width: 267px; height: 300px; min-width: 0; min-height: 300px; align-self: start; display: grid; place-items: center; align-content: start; gap: 8px; border: 1px solid #d4d4d6; background: #fff; }
-.ds-media-preview img, .ds-media-preview video { width: 100%; max-height: 260px; object-fit: contain; }
+.ds-media-row { display: grid; grid-template-columns: minmax(180px, 267px) minmax(0, 1fr) 32px; gap: 12px; padding: 12px; border: 1px solid #d4d4d6; background: #fcfcfc; min-height: 166px; }
+.ds-media-preview { width: 267px; height: 134px; min-width: 0; min-height: 134px; align-self: start; display: grid; place-items: center; align-content: start; gap: 8px; border: 1px solid #d4d4d6; background: #fff; }
+.ds-media-preview img, .ds-media-preview video { width: 100%; max-height: 110px; object-fit: contain; }
 .ds-media-preview strong { overflow-wrap: anywhere; font-size: 12px; }
 .ds-media-controls { display: flex; flex-wrap: wrap; align-content: start; align-items: center; gap: 10px; }
 .ds-media-action { display: inline-flex; align-items: center; justify-content: center; gap: 4px; flex: 0 0 auto; min-height: 30px; padding: 6px; border: 1px solid #bcbec0; border-radius: 4px; background: linear-gradient(#fff, #e9e9eb); color: #626568; font-size: 10px; font-weight: 700; white-space: nowrap; cursor: pointer; }
@@ -724,9 +724,9 @@ body.spec-off .repeater-head { margin-bottom: 2px; }
 .ds-media-icon { width: 14px; height: 14px; flex: 0 0 14px; }
 .ds-media-drop { color: #45494c; font-size: 10px; }
 .ds-media-remove { align-self: stretch; display: grid; place-items: center; border: 0; border-left: 1px solid #d4d4d6; background: transparent; color: #00bce2; cursor: pointer; }
-.ds-media-remove .ds-media-icon { width: 22px; height: 22px; }
-.ds-media-pager { display: flex; align-items: center; gap: 14px; min-height: 58px; padding: 6px 12px; color: #777d82; }
-.ds-media-pager button { min-width: 34px; min-height: 36px; border: 0; background: transparent; color: #45494c; font-size: 16px; cursor: pointer; }
+.ds-media-remove .ds-media-icon { width: 14px; height: 14px; }
+.ds-media-pager { display: flex; align-items: center; gap: 14px; min-height: 58px; padding: 6px 12px; color: #777d82; font-size: 15px; }
+.ds-media-pager button { min-width: 34px; min-height: 36px; border: 0; background: transparent; color: #45494c; font-size: 15px; cursor: pointer; }
 .ds-media-pager button:disabled { color: #c7c9cb; cursor: default; }
 .ds-media-page-current { min-width: 34px; padding: 8px 10px; border-radius: 4px; background: #f0f0f2; text-align: center; }
 .ds-media-page-summary { white-space: nowrap; }
@@ -735,8 +735,8 @@ body.spec-off .repeater-head { margin-bottom: 2px; }
 .ds-media-page-sizes button.selected { background: #f0f0f2; color: #8c9094; }
 .ds-media-add { margin-top: 2px; }
 @media (max-width: 700px) {
-	.ds-media-row { grid-template-columns: minmax(0, 1fr) 36px; gap: 12px; padding: 10px; min-height: 0; }
-	.ds-media-preview { grid-column: 1 / -1; width: 100%; height: 180px; min-height: 180px; }
+	.ds-media-row { grid-template-columns: minmax(0, 1fr) 32px; gap: 8px; padding: 10px; min-height: 0; }
+	.ds-media-preview { grid-column: 1 / -1; width: 100%; height: 134px; min-height: 134px; }
 	.ds-media-controls { grid-column: 1; }
 	.ds-media-action { min-height: 30px; padding: 6px; font-size: 10px; }
 	.ds-media-drop { flex-basis: 100%; }
@@ -2781,6 +2781,7 @@ window.ENVINCIDENT_SURVEY = {
 			pager.append(previous, pageNumber, next, pageSummary, pageSizes);
 			const svgIcon = (kind) => {
 				const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+				svg.classList.add("ds-media-icon");
 				svg.setAttribute("viewBox", "0 0 24 24");
 				svg.setAttribute("aria-hidden", "true");
 				svg.setAttribute("fill", "none");
