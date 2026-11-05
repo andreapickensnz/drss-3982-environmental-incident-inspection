@@ -712,15 +712,34 @@ body.spec-off .repeater-head { margin-bottom: 2px; }
 .ds-clear { position: absolute; right: 25px; top: 0; bottom: 0; border: 0; background: transparent; color: #626568; cursor: pointer; }
 .ds-media { min-width: 0; }
 .ds-media-list { display: grid; gap: 8px; margin-bottom: 10px; }
-.ds-media-row { display: grid; grid-template-columns: minmax(100px, 25%) minmax(0, 1fr) 32px; gap: 12px; padding: 12px; border: 1px solid #d4d4d6; background: #fcfcfc; min-height: 110px; }
-.ds-media-row .action-row { align-content: start; align-items: start; }
-.ds-media-preview { min-width: 0; display: grid; gap: 8px; align-content: start; }
-.ds-media-preview img, .ds-media-preview video { width: 100%; max-height: 180px; object-fit: contain; }
+.ds-media-row { display: grid; grid-template-columns: minmax(180px, 268px) minmax(0, 1fr) 52px; gap: 30px; padding: 16px 24px; border: 1px solid #d4d4d6; background: #fcfcfc; min-height: 336px; }
+.ds-media-preview { min-width: 0; min-height: 300px; display: grid; place-items: center; align-content: start; gap: 8px; border: 1px solid #d4d4d6; background: #fff; }
+.ds-media-preview img, .ds-media-preview video { width: 100%; max-height: 260px; object-fit: contain; }
 .ds-media-preview strong { overflow-wrap: anywhere; font-size: 12px; }
-.ds-media-remove { align-self: center; border: 0; background: transparent; color: #00bce2; cursor: pointer; font-size: 22px; }
+.ds-media-controls { display: flex; flex-wrap: wrap; align-content: start; align-items: center; gap: 10px; }
+.ds-media-action { display: inline-flex; align-items: center; gap: 8px; min-height: 46px; padding: 0 14px; border: 1px solid #bcbec0; border-radius: 6px; background: linear-gradient(#fff, #e9e9eb); color: #626568; font-size: 15px; font-weight: 700; cursor: pointer; }
+.ds-media-icon { width: 18px; height: 18px; flex: 0 0 18px; }
+.ds-media-drop { color: #45494c; font-size: 16px; }
+.ds-media-remove { align-self: stretch; display: grid; place-items: center; border: 0; border-left: 1px solid #d4d4d6; background: transparent; color: #00bce2; cursor: pointer; }
+.ds-media-remove .ds-media-icon { width: 22px; height: 22px; }
+.ds-media-pager { display: flex; align-items: center; gap: 14px; min-height: 58px; padding: 6px 12px; color: #777d82; }
+.ds-media-pager button { min-width: 34px; min-height: 36px; border: 0; background: transparent; color: #45494c; font-size: 16px; cursor: pointer; }
+.ds-media-pager button:disabled { color: #c7c9cb; cursor: default; }
+.ds-media-page-current { min-width: 34px; padding: 8px 10px; border-radius: 4px; background: #f0f0f2; text-align: center; }
+.ds-media-page-summary { white-space: nowrap; }
+.ds-media-page-sizes { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+.ds-media-page-sizes button { min-width: 32px; padding: 0 4px; }
+.ds-media-page-sizes button.selected { background: #f0f0f2; color: #8c9094; }
+.ds-media-add { margin-top: 2px; }
 @media (max-width: 700px) {
-	.ds-media-row { grid-template-columns: minmax(0, 1fr) 30px; }
-	.ds-media-preview { grid-column: 1 / -1; }
+	.ds-media-row { grid-template-columns: minmax(0, 1fr) 36px; gap: 12px; padding: 10px; min-height: 0; }
+	.ds-media-preview { grid-column: 1 / -1; min-height: 180px; }
+	.ds-media-controls { grid-column: 1; }
+	.ds-media-action { min-height: 40px; padding: 0 10px; font-size: 13px; }
+	.ds-media-drop { flex-basis: 100%; }
+	.ds-media-remove { grid-column: 2; grid-row: 2; border-left: 0; }
+	.ds-media-pager { flex-wrap: wrap; gap: 6px; padding: 6px 0; }
+	.ds-media-page-sizes { flex-basis: 100%; margin-left: 0; justify-content: space-between; }
 }
 
 /* ================= DESK SURFACE ================= */
@@ -2747,10 +2766,76 @@ window.ENVINCIDENT_SURVEY = {
 		if (surface === "desk") {
 			const wrap = el("div", "ds-media");
 			const list = el("div", "ds-media-list");
+			const rows = [];
+			let pageSize = 5;
+			let currentPage = 1;
+			const pager = el("div", "ds-media-pager");
+			const previous = el("button", null, "‹");
+			previous.type = "button";
+			previous.setAttribute("aria-label", "Previous media page");
+			const pageNumber = el("span", "ds-media-page-current", "1");
+			const next = el("button", null, "›");
+			next.type = "button";
+			next.setAttribute("aria-label", "Next media page");
+			const pageSummary = el("span", "ds-media-page-summary", "Page 1 of 1 (1 items)");
+			const pageSizes = el("div", "ds-media-page-sizes");
+			const sizeButtons = [];
+			const updatePager = () => {
+				const pageCount = Math.max(1, Math.ceil(rows.length / pageSize));
+				currentPage = Math.min(currentPage, pageCount);
+				rows.forEach((row, index) => {
+					row.hidden = Math.floor(index / pageSize) + 1 !== currentPage;
+				});
+				pageNumber.textContent = String(currentPage);
+				pageSummary.textContent = `Page ${currentPage} of ${pageCount} (${rows.length} items)`;
+				previous.disabled = currentPage <= 1;
+				next.disabled = currentPage >= pageCount;
+				sizeButtons.forEach(([size, button]) => button.classList.toggle("selected", size === pageSize));
+			};
+			previous.addEventListener("click", () => { currentPage -= 1; updatePager(); });
+			next.addEventListener("click", () => { currentPage += 1; updatePager(); });
+			for (const size of [5, 10, 20, 50, 100, 500]) {
+				const button = el("button", null, String(size));
+				button.type = "button";
+				button.setAttribute("aria-label", `Show ${size} media items per page`);
+				button.addEventListener("click", () => { pageSize = size; currentPage = 1; updatePager(); });
+				pageSizes.appendChild(button);
+				sizeButtons.push([size, button]);
+			}
+			pager.append(previous, pageNumber, next, pageSummary, pageSizes);
+			const svgIcon = (kind) => {
+				const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+				svg.setAttribute("viewBox", "0 0 24 24");
+				svg.setAttribute("aria-hidden", "true");
+				svg.setAttribute("fill", "none");
+				svg.setAttribute("stroke", "currentColor");
+				svg.setAttribute("stroke-width", "2");
+				svg.setAttribute("stroke-linecap", "round");
+				svg.setAttribute("stroke-linejoin", "round");
+				const paths = {
+					camera: ["M4 7h4l2-3h4l2 3h4v13H4z"],
+					file: ["M6 3h8l5 5v13H6z", "M14 3v6h5"],
+					trash: ["M4 7h16", "M9 7V4h6v3", "m6 7 1 14h10l1-14", "M10 11v6", "M14 11v6"]
+				};
+				paths[kind].forEach((data) => {
+					const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+					path.setAttribute("d", data);
+					svg.appendChild(path);
+				});
+				if (kind === "camera") {
+					const lens = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+					lens.setAttribute("cx", "12");
+					lens.setAttribute("cy", "13");
+					lens.setAttribute("r", "3");
+					svg.appendChild(lens);
+				}
+				return svg;
+			};
 			const addRow = () => {
 				const row = el("div", "ds-media-row");
 				const preview = el("div", "ds-media-preview");
-				const controls = el("div", "action-row");
+				preview.setAttribute("aria-label", field.media === "video" ? "Video preview" : "Photo preview");
+				const controls = el("div", "ds-media-controls");
 				const input = el("input");
 				input.type = "file";
 				input.accept = field.media === "video" ? "video/*" : "image/*";
@@ -2768,24 +2853,32 @@ window.ENVINCIDENT_SURVEY = {
 					preview.append(media, el("strong", null, file.name));
 				};
 				input.addEventListener("change", () => showFile(input.files[0]));
-				for (const label of ["Select a file", "Capture", "Existing File"]) {
-					const button = el("button", "add", label);
+				const action = (label, icon, capture) => {
+					const button = el("button", "ds-media-action");
 					button.type = "button";
+					if (icon) button.appendChild(svgIcon(icon));
+					button.appendChild(document.createTextNode(label));
 					button.addEventListener("click", () => {
-						if (label === "Capture") input.setAttribute("capture", "environment");
+						if (capture) input.setAttribute("capture", "environment");
 						else input.removeAttribute("capture");
 						input.click();
 					});
 					controls.appendChild(button);
-					if (label === "Select a file") controls.appendChild(el("span", null, "or Drop file here"));
-				}
-				const remove = el("button", "ds-media-remove", "×");
+				};
+				action("Select a file", null, false);
+				controls.appendChild(el("span", "ds-media-drop", "or Drop file here"));
+				action("Capture", "camera", true);
+				action("Existing File", "file", false);
+				const remove = el("button", "ds-media-remove");
 				remove.type = "button";
 				remove.title = `Remove ${field.label}`;
 				remove.setAttribute("aria-label", remove.title);
+				remove.appendChild(svgIcon("trash"));
 				remove.addEventListener("click", () => {
 					if (previewUrl) URL.revokeObjectURL(previewUrl);
+					rows.splice(rows.indexOf(row), 1);
 					row.remove();
+					updatePager();
 				});
 				row.addEventListener("dragover", (event) => event.preventDefault());
 				row.addEventListener("drop", (event) => {
@@ -2794,11 +2887,15 @@ window.ENVINCIDENT_SURVEY = {
 				});
 				row.append(preview, controls, remove, input);
 				list.appendChild(row);
+				rows.push(row);
+				currentPage = Math.max(1, Math.ceil(rows.length / pageSize));
+				updatePager();
 			};
-			const add = el("button", "add", "+ Add");
+			const add = el("button", "add ds-media-add");
 			add.type = "button";
+			add.append(el("span", "add-icon", "+"), document.createTextNode("Add"));
 			add.addEventListener("click", addRow);
-			wrap.append(list, add);
+			wrap.append(list, pager, add);
 			addRow();
 			return wrap;
 		}
