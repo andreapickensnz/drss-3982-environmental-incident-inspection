@@ -835,7 +835,7 @@ body.desk { background: linear-gradient(to bottom left, #ededf9, #f0f0f9); }
 .surface-desk .part-body,
 .surface-desk .section-body {
 	display: grid;
-	grid-template-columns: repeat(2, minmax(0, 1fr));
+	grid-template-columns: minmax(0, 1fr);
 	gap: 0 28px;
 	align-items: start;
 }
@@ -857,7 +857,7 @@ body.desk { background: linear-gradient(to bottom left, #ededf9, #f0f0f9); }
 .surface-desk .part-body > .cond-state,
 .surface-desk .section-body > .cond-state { grid-column: 1 / -1; }
 .surface-desk .brick-item { padding: 8px 12px; min-width: 70px; }
-.surface-desk .rep-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 20px; }
+.surface-desk .rep-row { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0 20px; }
 .surface-desk .rep-row > .rep-bar,
 .surface-desk .rep-row > .is-wide { grid-column: 1 / -1; }
 .surface-desk .part-body > .starts-row,
@@ -1379,33 +1379,6 @@ body.record .add .add-icon { font-size: 16px; line-height: 1; font-weight: 400; 
 .surface-desk .field[data-field-id="warrantName"] > input,
 .surface-desk .field[data-field-id="requiredAction"] > textarea {
 	background: var(--field-bg);
-}
-@media (min-width: 721px) {
-	body.record .surface-desk:not(.single-column) .part-body,
-	body.record .surface-desk:not(.single-column) .section-body,
-	body.record .surface-desk:not(.single-column) .rep-row {
-		display: grid;
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-		align-items: start;
-		gap: 0 28px;
-		padding: 0 22px;
-	}
-	body.record .surface-desk:not(.single-column) .part-body > .is-wide,
-	body.record .surface-desk:not(.single-column) .section-body > .is-wide,
-	body.record .surface-desk:not(.single-column) .part-body > .section,
-	body.record .surface-desk:not(.single-column) .section-body > .section,
-	body.record .surface-desk:not(.single-column) .part-body > .repeater,
-	body.record .surface-desk:not(.single-column) .section-body > .repeater,
-	body.record .surface-desk:not(.single-column) .part-body > .spec-note,
-	body.record .surface-desk:not(.single-column) .section-body > .spec-note,
-	body.record .surface-desk:not(.single-column) .part-body > .cond-state,
-	body.record .surface-desk:not(.single-column) .section-body > .cond-state {
-		grid-column: 1 / -1;
-	}
-	body.record .surface-desk:not(.single-column) .rep-row > .rep-bar,
-	body.record .surface-desk:not(.single-column) .rep-row > .is-wide {
-		grid-column: 1 / -1;
-	}
 }
 .ds-toggle { display: flex; align-items: center; gap: 8px; min-height: 28px; margin-bottom: 8px; }
 .ds-switch {
