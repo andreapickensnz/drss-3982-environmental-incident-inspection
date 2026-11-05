@@ -2822,8 +2822,10 @@ window.ENVINCIDENT_SURVEY = {
 		const row = el("div", "action-row");
 		const btn = el("button", "add");
 		btn.type = "button";
-		btn.appendChild(el("span", "add-icon", "+"));
-		btn.appendChild(document.createTextNode(field.label));
+		const icon = el("span", "add-icon", "+");
+		icon.setAttribute("aria-hidden", "true");
+		btn.appendChild(icon);
+		btn.appendChild(document.createTextNode(field.label.replace(/^\+\s*/, "")));
 		row.appendChild(btn);
 		if (field.mandatory) row.appendChild(el("span", "req", "*"));
 		const chip = originChip(field.origin);
