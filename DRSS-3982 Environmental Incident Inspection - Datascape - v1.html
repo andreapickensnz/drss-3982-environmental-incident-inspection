@@ -232,6 +232,7 @@ body.spec-off .part-removed { display: none; }
 
 .field { display: flex; flex-direction: column; gap: var(--ds-field-gap); margin-bottom: var(--ds-field-margin); }
 .label { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
+.surface-desk .field-media > .label { padding-bottom: 6px; border-bottom: 1px solid var(--divider); }
 .field-help { margin: 2px 0 8px; color: #5c6b7a; font-size: 13px; line-height: 1.4; }
 .label-text { font-size: var(--ds-label-font); font-weight: 700; color: var(--caption); line-height: 1.2; }
 .req { color: var(--pink); font-weight: 700; }
@@ -725,8 +726,8 @@ body.spec-off .repeater-head { margin-bottom: 2px; }
 .ds-media-drop { color: #45494c; font-size: 10px; }
 .ds-media-remove { align-self: stretch; display: grid; place-items: center; border: 0; border-left: 1px solid #d4d4d6; background: transparent; color: #00bce2; cursor: pointer; }
 .ds-media-remove .ds-media-icon { width: 14px; height: 14px; }
-.ds-media-pager { display: flex; align-items: center; gap: 14px; min-height: 58px; padding: 6px 12px; color: #777d82; font-size: 15px; }
-.ds-media-pager button { min-width: 34px; min-height: 36px; border: 0; background: transparent; color: #45494c; font-size: 15px; cursor: pointer; }
+.ds-media-pager { display: flex; align-items: center; gap: 14px; min-height: 58px; padding: 6px 12px; color: #777d82; font-size: 16px; }
+.ds-media-pager button { min-width: 34px; min-height: 36px; border: 0; background: transparent; color: #45494c; font-size: 16px; cursor: pointer; }
 .ds-media-pager button:disabled { color: #c7c9cb; cursor: default; }
 .ds-media-page-current { min-width: 34px; padding: 8px 10px; border-radius: 4px; background: #f0f0f2; text-align: center; }
 .ds-media-page-summary { white-space: nowrap; }
@@ -2753,7 +2754,7 @@ window.ENVINCIDENT_SURVEY = {
 			const next = el("button", null, "›");
 			next.type = "button";
 			next.setAttribute("aria-label", "Next media page");
-			const pageSummary = el("span", "ds-media-page-summary", "Page 1 of 1 (1 items)");
+			const pageSummary = el("span", "ds-media-page-summary", "Page 1 of 1 (0 items)");
 			const pageSizes = el("div", "ds-media-page-sizes");
 			const sizeButtons = [];
 			const updatePager = () => {
@@ -2873,7 +2874,7 @@ window.ENVINCIDENT_SURVEY = {
 			add.append(el("span", "add-icon", "+"), document.createTextNode("Add"));
 			add.addEventListener("click", addRow);
 			wrap.append(list, pager, add);
-			addRow();
+			updatePager();
 			return wrap;
 		}
 		const row = el("div", "media-row");
