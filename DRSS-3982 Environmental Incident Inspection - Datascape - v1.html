@@ -1353,7 +1353,35 @@ body.record .part-head, body.record .section-head {
 }
 body.record .section-head { font-size: 13px; padding-top: 8px; border-bottom: 0; }
 body.record .part-head .toggle, body.record .section-head .toggle { font-size: 12px; font-weight: 700; color: var(--shallow-blue); }
-body.record .add { color: var(--shallow-blue); border-color: var(--shallow-blue); font-weight: 700; height: 32px; background: #fff; }
+body.record .add { color: #5c5f5c; border: 1px solid #c9c9c9; border-radius: 4px; min-height: 32px; padding: 0 12px; background: linear-gradient(#fbfbfc, #f0f0f2); font-size: 12px; font-weight: 700; }
+body.record .add .add-icon { font-size: 16px; line-height: 1; font-weight: 400; }
+@media (min-width: 721px) {
+	body.record .surface-desk:not(.single-column) .part-body,
+	body.record .surface-desk:not(.single-column) .section-body,
+	body.record .surface-desk:not(.single-column) .rep-row {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		align-items: start;
+		gap: 0 28px;
+		padding: 0 22px;
+	}
+	body.record .surface-desk:not(.single-column) .part-body > .is-wide,
+	body.record .surface-desk:not(.single-column) .section-body > .is-wide,
+	body.record .surface-desk:not(.single-column) .part-body > .section,
+	body.record .surface-desk:not(.single-column) .section-body > .section,
+	body.record .surface-desk:not(.single-column) .part-body > .repeater,
+	body.record .surface-desk:not(.single-column) .section-body > .repeater,
+	body.record .surface-desk:not(.single-column) .part-body > .spec-note,
+	body.record .surface-desk:not(.single-column) .section-body > .spec-note,
+	body.record .surface-desk:not(.single-column) .part-body > .cond-state,
+	body.record .surface-desk:not(.single-column) .section-body > .cond-state {
+		grid-column: 1 / -1;
+	}
+	body.record .surface-desk:not(.single-column) .rep-row > .rep-bar,
+	body.record .surface-desk:not(.single-column) .rep-row > .is-wide {
+		grid-column: 1 / -1;
+	}
+}
 .ds-toggle { display: flex; align-items: center; gap: 8px; min-height: 28px; margin-bottom: 8px; }
 .ds-switch {
 	width: 32px;
@@ -2792,8 +2820,10 @@ window.ENVINCIDENT_SURVEY = {
 	*/
 	function actionControl(field) {
 		const row = el("div", "action-row");
-		const btn = el("button", "add", surface === "desk" ? `+ ${field.label}` : field.label);
+		const btn = el("button", "add");
 		btn.type = "button";
+		btn.appendChild(el("span", "add-icon", "+"));
+		btn.appendChild(document.createTextNode(field.label));
 		row.appendChild(btn);
 		if (field.mandatory) row.appendChild(el("span", "req", "*"));
 		const chip = originChip(field.origin);
