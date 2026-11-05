@@ -1399,11 +1399,7 @@ window.ENVINCIDENT_SURVEY = {
 		officer: "H. Giles",
 		council: "ORC",
 		csv: "DRSS-3982 Environmental Incident Inspection-3.xlsx",
-		headsUp: [{
-			persist: true,
-			lead: "Confirm reference survey:",
-			text: "The supplied link's Survey-8310-92 identifier could not be matched in the static exports. The matching configured form is SurveyType EII with the Environmental Incident Inspection layout; this prototype uses EII as its base. Please confirm that is the intended reference form."
-		}],
+		headsUp: [],
 
 		// Master list, Surveys row and Activity Types row, read 3 November 2026.
 		routing: "The DRSS-3979 master list records Activity Type: Incident Inspection and Subtype: Environmental Incident. The survey is active, available for ad hoc capture, has FWA Job Type Incident, and Location capture on survey is Yes. The workbook includes Add Part choices for Contact Management Request, Location Management request, Odour Survey, and Sampling; the crossed-out Coastal Structure Inspection option is omitted. Planned and ad hoc inspections use the same section order.",
@@ -1574,10 +1570,11 @@ window.ENVINCIDENT_SURVEY = {
 							conditionText: "IF Capture Weather = Yes",
 							showWhen: { field: "captureWeather", equals: "Yes" },
 							fields: [
-								{ id: "airTemp", label: "Air Temperature", type: "text", origin: "standard" },
-								{ id: "cloudCover", label: "Cloud Cover", type: "text", origin: "standard" },
-								{ id: "rainfall", label: "Rainfall", type: "text", origin: "standard" },
-								{ id: "windDirection", label: "Wind Direction", type: "text", origin: "standard" },
+								{ id: "airTemp", label: "Air Temperature", type: "select", options: ["Hot (above 28 degrees)", "Warm (15-28 degrees)", "Cool (10-15 degrees)", "Cold (0-10 degrees)", "Freezing (<0 degrees)"], origin: "standard", detail: "Existing DSCREGAirTemperature options retained; workbook requests no change." },
+								{ id: "cloudCover", label: "Cloud Cover", type: "select", options: ["0/8", "1/8", "2/8", "3/8", "4/8", "5/8", "6/8", "7/8", "8/8"], origin: "standard", detail: "Existing DSCREGCloudCover options retained; workbook requests no change." },
+								{ id: "rainfall", label: "Rainfall", type: "select", options: ["Medium", "Heavy", "Light"], origin: "standard", detail: "Existing DSCREGRainfall options retained; workbook requests no change." },
+								{ id: "windDirection", label: "Wind Direction", type: "select", options: ["E", "N", "NE", "NW", "S", "SE", "SW", "W"], origin: "standard", detail: "Existing DSCREGWindDirection options retained; workbook requests no change." },
+								{ id: "windStrength", label: "Wind Strength", type: "select", options: ["Medium", "Light", "Strong"], origin: "standard", detail: "Existing DSCREGWindStrength options retained; workbook requests no change." },
 								{ id: "otherWeather", label: "Other Weather Conditions", type: "textarea", origin: "standard" }
 							]
 						}

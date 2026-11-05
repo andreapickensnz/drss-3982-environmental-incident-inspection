@@ -693,6 +693,36 @@ body.spec-off .repeater-head { margin-bottom: 2px; }
 
 .signature { border-style: dashed; padding: 16px; }
 
+.surface-desk .add {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	min-height: 32px;
+	height: auto;
+	width: auto;
+	border: 1px solid #bcbec0;
+	border-radius: 4px;
+	background: linear-gradient(#fff, #e9e9eb);
+	color: #626568;
+	padding: 6px 12px;
+	font-size: 12px;
+}
+.ds-select { position: relative; }
+.ds-select select { width: 100%; padding-right: 52px; }
+.ds-clear { position: absolute; right: 25px; top: 0; bottom: 0; border: 0; background: transparent; color: #626568; cursor: pointer; }
+.ds-media { min-width: 0; }
+.ds-media-list { display: grid; gap: 8px; margin-bottom: 10px; }
+.ds-media-row { display: grid; grid-template-columns: minmax(100px, 25%) minmax(0, 1fr) 32px; gap: 12px; padding: 12px; border: 1px solid #d4d4d6; background: #fcfcfc; min-height: 110px; }
+.ds-media-row .action-row { align-content: start; align-items: start; }
+.ds-media-preview { min-width: 0; display: grid; gap: 8px; align-content: start; }
+.ds-media-preview img, .ds-media-preview video { width: 100%; max-height: 180px; object-fit: contain; }
+.ds-media-preview strong { overflow-wrap: anywhere; font-size: 12px; }
+.ds-media-remove { align-self: center; border: 0; background: transparent; color: #00bce2; cursor: pointer; font-size: 22px; }
+@media (max-width: 700px) {
+	.ds-media-row { grid-template-columns: minmax(0, 1fr) 30px; }
+	.ds-media-preview { grid-column: 1 / -1; }
+}
+
 /* ================= DESK SURFACE ================= */
 
 body.desk { background: linear-gradient(to bottom left, #ededf9, #f0f0f9); }
@@ -1442,11 +1472,7 @@ window.ENVINCIDENT_SURVEY = {
 		officer: "H. Giles",
 		council: "ORC",
 		csv: "DRSS-3982 Environmental Incident Inspection-3.xlsx",
-		headsUp: [{
-			persist: true,
-			lead: "Confirm reference survey:",
-			text: "The supplied link's Survey-8310-92 identifier could not be matched in the static exports. The matching configured form is SurveyType EII with the Environmental Incident Inspection layout; this prototype uses EII as its base. Please confirm that is the intended reference form."
-		}],
+		headsUp: [],
 
 		// Master list, Surveys row and Activity Types row, read 3 November 2026.
 		routing: "The DRSS-3979 master list records Activity Type: Incident Inspection and Subtype: Environmental Incident. The survey is active, available for ad hoc capture, has FWA Job Type Incident, and Location capture on survey is Yes. The workbook includes Add Part choices for Contact Management Request, Location Management request, Odour Survey, and Sampling; the crossed-out Coastal Structure Inspection option is omitted. Planned and ad hoc inspections use the same section order.",
@@ -1617,10 +1643,11 @@ window.ENVINCIDENT_SURVEY = {
 							conditionText: "IF Capture Weather = Yes",
 							showWhen: { field: "captureWeather", equals: "Yes" },
 							fields: [
-								{ id: "airTemp", label: "Air Temperature", type: "text", origin: "standard" },
-								{ id: "cloudCover", label: "Cloud Cover", type: "text", origin: "standard" },
-								{ id: "rainfall", label: "Rainfall", type: "text", origin: "standard" },
-								{ id: "windDirection", label: "Wind Direction", type: "text", origin: "standard" },
+								{ id: "airTemp", label: "Air Temperature", type: "select", options: ["Hot (above 28 degrees)", "Warm (15-28 degrees)", "Cool (10-15 degrees)", "Cold (0-10 degrees)", "Freezing (<0 degrees)"], origin: "standard", detail: "Existing DSCREGAirTemperature options retained; workbook requests no change." },
+								{ id: "cloudCover", label: "Cloud Cover", type: "select", options: ["0/8", "1/8", "2/8", "3/8", "4/8", "5/8", "6/8", "7/8", "8/8"], origin: "standard", detail: "Existing DSCREGCloudCover options retained; workbook requests no change." },
+								{ id: "rainfall", label: "Rainfall", type: "select", options: ["Medium", "Heavy", "Light"], origin: "standard", detail: "Existing DSCREGRainfall options retained; workbook requests no change." },
+								{ id: "windDirection", label: "Wind Direction", type: "select", options: ["E", "N", "NE", "NW", "S", "SE", "SW", "W"], origin: "standard", detail: "Existing DSCREGWindDirection options retained; workbook requests no change." },
+								{ id: "windStrength", label: "Wind Strength", type: "select", options: ["Medium", "Light", "Strong"], origin: "standard", detail: "Existing DSCREGWindStrength options retained; workbook requests no change." },
 								{ id: "otherWeather", label: "Other Weather Conditions", type: "textarea", origin: "standard" }
 							]
 						}
@@ -2311,6 +2338,12 @@ window.ENVINCIDENT_SURVEY = {
 	/* ---------- control selection ---------- */
 
 	function controlFor(field) {
+		if (surface === "desk" && field.type === "select") {
+			return { mode: "dropdown", why: "Single-select dropdown, matching the existing Datascape survey; workbook options retained." };
+		}
+		if (surface === "desk" && field.type === "multiselect") {
+			return { mode: "searchlist", why: "Searchable multi-select with removable selected chips, matching the existing Datascape survey." };
+		}
 		if (field.type === "boolean") {
 			return { mode: "brick", why: "Boolean brick — one tap, per the design article." };
 		}
@@ -2472,6 +2505,24 @@ window.ENVINCIDENT_SURVEY = {
 			select.appendChild(opt);
 		});
 		bind(select, field, scope, () => select.value);
+		if (surface === "desk") {
+			const wrap = el("div", "control ds-select");
+			const clear = el("button", "ds-clear", "×");
+			clear.type = "button";
+			clear.title = `Clear ${field.label}`;
+			clear.setAttribute("aria-label", clear.title);
+			if (!select.querySelector('option[value=""]')) {
+				const empty = el("option", null, "[Not Entered]");
+				empty.value = "";
+				select.prepend(empty);
+			}
+			clear.addEventListener("click", () => {
+				select.value = "";
+				select.dispatchEvent(new Event("change", { bubbles: true }));
+			});
+			wrap.append(select, clear);
+			return wrap;
+		}
 		return select;
 	}
 
@@ -2659,6 +2710,64 @@ window.ENVINCIDENT_SURVEY = {
 	}
 
 	function mediaControl(field) {
+		if (surface === "desk") {
+			const wrap = el("div", "ds-media");
+			const list = el("div", "ds-media-list");
+			const addRow = () => {
+				const row = el("div", "ds-media-row");
+				const preview = el("div", "ds-media-preview");
+				const controls = el("div", "action-row");
+				const input = el("input");
+				input.type = "file";
+				input.accept = field.media === "video" ? "video/*" : "image/*";
+				input.hidden = true;
+				let previewUrl;
+				const showFile = (file) => {
+					if (!file) return;
+					if (previewUrl) URL.revokeObjectURL(previewUrl);
+					previewUrl = URL.createObjectURL(file);
+					preview.replaceChildren();
+					const media = el(field.media === "video" ? "video" : "img");
+					media.src = previewUrl;
+					if (field.media === "video") media.controls = true;
+					else media.alt = file.name;
+					preview.append(media, el("strong", null, file.name));
+				};
+				input.addEventListener("change", () => showFile(input.files[0]));
+				for (const label of ["Select a file", "Capture", "Existing File"]) {
+					const button = el("button", "add", label);
+					button.type = "button";
+					button.addEventListener("click", () => {
+						if (label === "Capture") input.setAttribute("capture", "environment");
+						else input.removeAttribute("capture");
+						input.click();
+					});
+					controls.appendChild(button);
+					if (label === "Select a file") controls.appendChild(el("span", null, "or Drop file here"));
+				}
+				const remove = el("button", "ds-media-remove", "×");
+				remove.type = "button";
+				remove.title = `Remove ${field.label}`;
+				remove.setAttribute("aria-label", remove.title);
+				remove.addEventListener("click", () => {
+					if (previewUrl) URL.revokeObjectURL(previewUrl);
+					row.remove();
+				});
+				row.addEventListener("dragover", (event) => event.preventDefault());
+				row.addEventListener("drop", (event) => {
+					event.preventDefault();
+					showFile(event.dataTransfer.files[0]);
+				});
+				row.append(preview, controls, remove, input);
+				list.appendChild(row);
+			};
+			const add = el("button", "add", "+ Add");
+			add.type = "button";
+			add.addEventListener("click", addRow);
+			wrap.append(list, add);
+			addRow();
+			return wrap;
+		}
 		const row = el("div", "media-row");
 		const box = el("div", "control media-box", field.media === "video" ? "Upload · 0 added" : "Upload Photos");
 		row.appendChild(box);
@@ -2683,7 +2792,7 @@ window.ENVINCIDENT_SURVEY = {
 	*/
 	function actionControl(field) {
 		const row = el("div", "action-row");
-		const btn = el("button", "add", field.label);
+		const btn = el("button", "add", surface === "desk" ? `+ ${field.label}` : field.label);
 		btn.type = "button";
 		row.appendChild(btn);
 		if (field.mandatory) row.appendChild(el("span", "req", "*"));
@@ -2802,6 +2911,10 @@ window.ENVINCIDENT_SURVEY = {
 			default: node = el("div", null, `[${field.type}]`);
 		}
 		wrap.appendChild(node);
+		if (surface === "desk") {
+			node.querySelectorAll("input:not([type=radio]):not([type=checkbox]), select, textarea").forEach((input) => input.setAttribute("aria-label", field.label));
+			if (node.matches("input, select, textarea")) node.setAttribute("aria-label", field.label);
+		}
 		wrap.appendChild(renderSpec(field));
 
 		const wide = ["textarea", "spatial", "media", "multiselect", "derived", "signature"].includes(field.type)
