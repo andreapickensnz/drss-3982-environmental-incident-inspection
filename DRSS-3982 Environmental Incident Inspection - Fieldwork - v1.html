@@ -1342,6 +1342,9 @@ body.record .add { color: var(--shallow-blue); border-color: var(--shallow-blue)
 .ds-toggle-val { color: #00bce2; font-size: 12px; font-weight: 700; min-width: 18px; }
 .ds-toggle-label { font-size: 13px; color: #1c1c1d; }
 
+	.chip-prefill { background: #e2f3ee; color: #155347; border: 1px solid #a9d2c8; white-space: normal; max-width: 100%; overflow-wrap: anywhere; }
+	.chip-default { background: #edf2f7; color: #34485c; border: 1px solid #c7d2df; white-space: normal; max-width: 100%; overflow-wrap: anywhere; }
+	.section-head { cursor: default; }
 	</style>
 </head>
 <body class="field">
@@ -1389,20 +1392,19 @@ body.record .add { color: var(--shallow-blue); border-color: var(--shallow-blue)
 */
 window.ENVINCIDENT_SURVEY = {
 	meta: {
-			docTitle: "DRSS-3982 Environmental Incident Inspection · Fieldwork v1",
+		docTitle: "DRSS-3982 Environmental Incident Inspection · Fieldwork v1",
 		jira: "DRSS-3982",
 		jiraUrl: "https://datacomgroup.atlassian.net/browse/DRSS-3982",
 		surveyType: "Environmental Incident Inspection",
 		shortCode: "Environmental Incident Inspection",
-		job: "INC.820 · Incident Inspection · Environmental Incident",
+		job: "INC.820 · Incident Inspection · Environmental",
 		property: "Green Island industrial area",
 		officer: "H. Giles",
 		council: "ORC",
 		csv: "DRSS-3982 Environmental Incident Inspection-3.xlsx",
 		headsUp: [],
 
-		// Master list, Surveys row and Activity Types row, read 3 November 2026.
-		routing: "The DRSS-3979 master list records Activity Type: Incident Inspection and Subtype: Environmental Incident. The survey is active, available for ad hoc capture, has FWA Job Type Incident, and Location capture on survey is Yes. The workbook includes Add Part choices for Contact Management Request, Location Management request, Odour Survey, and Sampling; the crossed-out Coastal Structure Inspection option is omitted. Planned and ad hoc inspections use the same section order.",
+		routing: "DRSS-3979 master list revision 4: Activity Type: Incident Inspection. Subtype: Environmental. In Incidents and Enforcement row 31, this is the default survey for RMA incident, available as Add Part and available for ad hoc capture. Surveys row 87 marks it active, Ready for Datacom, FWA Job Type Incident (NZ Regional Ad-hoc Incident), with location capture Yes. Activity Types row 76 marks it Expense and Send to FW: Yes, user defined only. The survey workbook includes Contact Management Request, Location Management request, Odour Survey, and Sampling as Add Part choices; the master mapping rows 32-34 list Odour survey, Sampling, and Contact Management Request. Location Management request is in the survey workbook but not listed in those master mapping rows. Planned and ad hoc inspections use the same section order.",
 
 		readerNotes: [
 			{
@@ -1410,8 +1412,12 @@ window.ENVINCIDENT_SURVEY = {
 				text: "The ticket asks for one section order whether the inspection was planned or started in the field. Text and multi-select answers add to what is already on the incident. A single select replaces what is already there."
 			},
 			{
-				heading: "Crossed-out rows are omitted.",
-				text: "Primary Officer, the old warrant options, the further-action yes/no, Coastal Structure Inspection, and the complete Signatures section are removed. Customer signatures under informed consent and search warrant remain because those rows are not crossed out."
+				heading: "Workbook coverage and pre-population.",
+				text: "Rows 4i-4p are in General Information. Date of Birth is in Contact, row 4f, and appears when Relationship Type is Alleged Offender. Spec notes identify workbook row references. Pre-population and default pills name their sources; no date source has been invented for Observation date. Only SECTION headings have hide/show controls, not SUB SECTION headings."
+			},
+			{
+				heading: "Crossed-out rows are omitted, with one platform exception.",
+				text: "Primary Officer, the old warrant options, the further-action yes/no, and Coastal Structure Inspection are removed. The workbook strikes out the standard Signatures block, but RSHL confirmed in the DRSS-1197 comments that it cannot be removed for one survey without removing it for everyone; retain it pending a platform change. Customer signatures under informed consent and search warrant remain separately."
 			}
 		]
 	},
@@ -1468,6 +1474,7 @@ window.ENVINCIDENT_SURVEY = {
 							type: "boolean",
 							options: ["Yes", "No"],
 							value: "Yes",
+							defaultSource: "Workbook F11: Yes",
 							mandatory: true,
 							origin: "wording",
 							detail: "Yes/No. The old True/False wording is crossed out. Same as other surveys."
@@ -1478,6 +1485,7 @@ window.ENVINCIDENT_SURVEY = {
 							type: "boolean",
 							options: ["Yes", "No"],
 							value: "No",
+							defaultSource: "Workbook F27: No",
 							origin: "new",
 							detail: "Defaults to No."
 						},
@@ -1496,6 +1504,7 @@ window.ENVINCIDENT_SURVEY = {
 							type: "boolean",
 							options: ["Yes", "No"],
 							value: "No",
+							defaultSource: "Workbook F29: No",
 							origin: "new",
 							detail: "Defaults to No."
 						}
@@ -1567,6 +1576,7 @@ window.ENVINCIDENT_SURVEY = {
 					sections: [
 						{
 							name: "Weather Variables",
+							horizontal: true,
 							conditionText: "IF Capture Weather = Yes",
 							showWhen: { field: "captureWeather", equals: "Yes" },
 							fields: [
@@ -1589,6 +1599,7 @@ window.ENVINCIDENT_SURVEY = {
 							type: "text",
 							mandatory: true,
 							origin: "wording",
+							prefill: "INC - Description (planned only)",
 							detail: "The old field name Comments is crossed out. Pre-filled on a planned inspection and left blank on an ad hoc inspection. Can be edited. Replaces the description already on the incident.",
 							mapsTo: "INC - Description"
 						},
@@ -1596,7 +1607,7 @@ window.ENVINCIDENT_SURVEY = {
 							id: "incidentWhen",
 							label: "Incident Date/Time",
 							type: "datetime",
-							value: "2026-04-16T08:40",
+							prefill: "INC - Incident date/time (planned only)",
 							mandatory: true,
 							origin: "new",
 							detail: "Pre-filled on a planned inspection and left blank on an ad hoc inspection. Can be edited. Replaces the date and time already on the incident.",
@@ -1632,11 +1643,11 @@ window.ENVINCIDENT_SURVEY = {
 				},
 				{
 					name: "Location",
-									detail: "The officer enters Label and Description; Observation date and Survey code are managed GIS attributes.",
-					   gis: [
-						   "Observation date: auto-populated in DDMMYYY 00:00 format, required, sent to GIS.",
-						   "Survey code: auto-populated from the Datascape survey number and sent to GIS. These are managed location attributes, not officer-entered fields."
-					   ],
+					detail: "The officer enters Label and Description; Observation date and Survey code are managed GIS attributes. Their source pills distinguish a confirmed source from an unanswered requirement.",
+					    gis: [
+						    "Observation date: auto-populated, required, sent to GIS. Its source is not specified in workbook Locations rows 4, 8 and 12; the format is written as DDMMYYY 00:00. Confirm the source field and intended date format; do not assume Incident Date/Time, survey date, or Actual Start Date.",
+						    "Survey code: auto-populated from the Datascape survey number and sent to GIS. These are managed location attributes, not officer-entered fields."
+					    ],
 									question: "DRSS-4062 lists Incident - Point, Incident - Line, and Incident - Polygon but marks Datascape templating as Not Yet. Confirm these templates are available and that the required Observation date and Survey code are populated and sent to GIS for every saved location.",
 					repeaters: [
 						{
@@ -1649,7 +1660,9 @@ window.ENVINCIDENT_SURVEY = {
 							fields: [
 								{ id: "incidentPoint", label: "Incident Location", type: "spatial", geometry: "Multi-point", origin: "new" },
 								{ id: "locationLabel", label: "Label", type: "text", mandatory: true, origin: "new" },
-								{ id: "locationDescription", label: "Description", type: "text", origin: "new" }
+								{ id: "locationDescription", label: "Description", type: "text", origin: "new" },
+								{ id: "observationDate", label: "Observation date", type: "readonly", mandatory: true, origin: "new", prefill: "Source not specified in workbook", question: "Locations row 4 requires auto-population and GIS transfer, but does not identify a source date. Confirm the source and the written DDMMYYY 00:00 format." },
+								{ id: "surveyCode", label: "Survey code", type: "readonly", origin: "new", prefill: "Datascape survey number", detail: "Locations row 5: populated from the Datascape survey number and sent to GIS." }
 							]
 						},
 						{
@@ -1662,7 +1675,9 @@ window.ENVINCIDENT_SURVEY = {
 							fields: [
 								{ id: "incidentLine", label: "Incident Location", type: "spatial", geometry: "Multi-line", origin: "new" },
 								{ id: "locationLabel", label: "Label", type: "text", mandatory: true, origin: "new" },
-								{ id: "locationDescription", label: "Description", type: "text", origin: "new" }
+								{ id: "locationDescription", label: "Description", type: "text", origin: "new" },
+								{ id: "observationDate", label: "Observation date", type: "readonly", mandatory: true, origin: "new", prefill: "Source not specified in workbook", question: "Locations row 8 requires auto-population and GIS transfer, but does not identify a source date. Confirm the source and the written DDMMYYY 00:00 format." },
+								{ id: "surveyCode", label: "Survey code", type: "readonly", origin: "new", prefill: "Datascape survey number", detail: "Locations row 9: populated from the Datascape survey number and sent to GIS." }
 							]
 						},
 						{
@@ -1675,7 +1690,9 @@ window.ENVINCIDENT_SURVEY = {
 							fields: [
 								{ id: "incidentPolygon", label: "Incident Location", type: "spatial", geometry: "Multi-polygon", origin: "new" },
 								{ id: "locationLabel", label: "Label", type: "text", mandatory: true, origin: "new" },
-								{ id: "locationDescription", label: "Description", type: "text", origin: "new" }
+								{ id: "locationDescription", label: "Description", type: "text", origin: "new" },
+								{ id: "observationDate", label: "Observation date", type: "readonly", mandatory: true, origin: "new", prefill: "Source not specified in workbook", question: "Locations row 12 requires auto-population and GIS transfer, but does not identify a source date. Confirm the source and the written DDMMYYY 00:00 format." },
+								{ id: "surveyCode", label: "Survey code", type: "readonly", origin: "new", prefill: "Datascape survey number", detail: "Locations row 13: populated from the Datascape survey number and sent to GIS." }
 							]
 						}
 					]
@@ -1710,10 +1727,12 @@ window.ENVINCIDENT_SURVEY = {
 								{
 									id: "dateOfBirth",
 									label: "Date of Birth",
+									workbookRow: "4f",
 									type: "date",
 									origin: "new",
 									conditionText: "IF Relationship Type = Alleged Offender",
-									showWhen: { field: "relationshipType", equals: "Alleged Offender" }
+									showWhen: { field: "relationshipType", equals: "Alleged Offender" },
+									detail: "Environmental Incident worksheet row 83 (4f): a Date field in each Contact repeater, shown only for Relationship Type Alleged Offender."
 								}
 							]
 						}
@@ -1749,6 +1768,7 @@ window.ENVINCIDENT_SURVEY = {
 					fields: [
 						{
 							id: "classification",
+							workbookRow: "4i",
 							label: "Incident Classification",
 							type: "multiselect",
 							origin: "wording",
@@ -1791,6 +1811,7 @@ window.ENVINCIDENT_SURVEY = {
 						},
 						{
 							id: "primaryResource",
+							workbookRow: "4j",
 							label: "Primary Resource Affected",
 							type: "select",
 							options: ["Air", "Coast", "Land", "Water"],
@@ -1800,6 +1821,7 @@ window.ENVINCIDENT_SURVEY = {
 						},
 						{
 							id: "speciesAffected",
+							workbookRow: "4k",
 							label: "Any Species Affected?",
 							type: "select",
 							options: ["Yes", "No", "Unsure"],
@@ -1808,6 +1830,7 @@ window.ENVINCIDENT_SURVEY = {
 						},
 						{
 							id: "affectedSpecies",
+							workbookRow: "4k",
 							label: "Affected Species",
 							type: "multilookup",
 							lookupOf: "Species",
@@ -1819,6 +1842,7 @@ window.ENVINCIDENT_SURVEY = {
 						},
 						{
 							id: "responseType",
+							workbookRow: "4l",
 							label: "Response Type",
 							type: "select",
 							options: [
@@ -1828,13 +1852,15 @@ window.ENVINCIDENT_SURVEY = {
 								"Referred to External Authority/Agency"
 							],
 							value: "Site Visit Investigation",
+							defaultSource: "Workbook F215: Site Visit Investigation",
 							origin: "wording",
 							detail: "Starts on Site visit investigation. Replaces the value already on the incident.",
 							mapsTo: "INC - Response type",
-							question: "The sheet asks whether “Referred to External Authority/Agency” duplicates the same option on Incident Outcome. Keep it here as well?"
+							question: "Workbook K218 asks whether Referred to External Authority/Agency should appear in both Response Type (4l, one choice) and Incident Outcome (4h, multiple choices). Both remain because neither option is struck out. RSHL needs to confirm whether to retain both or remove one; no duplication rule has been agreed."
 						},
 						{
 							id: "breach",
+							workbookRow: "4m",
 							label: "Breach",
 							type: "multiselect",
 							options: [
@@ -1847,6 +1873,7 @@ window.ENVINCIDENT_SURVEY = {
 						},
 						{
 							id: "impact",
+							workbookRow: "4n",
 							label: "Environmental Impact",
 							type: "select",
 							options: [
@@ -1859,6 +1886,7 @@ window.ENVINCIDENT_SURVEY = {
 						},
 						{
 							id: "impactComments",
+							workbookRow: "4n",
 							label: "Environmental Impact Comments",
 							type: "textarea",
 							origin: "wording",
@@ -1867,6 +1895,7 @@ window.ENVINCIDENT_SURVEY = {
 						},
 						{
 							id: "notified",
+							workbookRow: "4o",
 							label: "Notified of Incident",
 							type: "multiselect",
 							options: [
@@ -1880,6 +1909,7 @@ window.ENVINCIDENT_SURVEY = {
 						},
 						{
 							id: "notifiedOther",
+							workbookRow: "4o",
 							label: "Notified of Incident",
 							type: "text",
 							origin: "new",
@@ -1889,6 +1919,7 @@ window.ENVINCIDENT_SURVEY = {
 						},
 						{
 							id: "territorialAuthority",
+							workbookRow: "4p",
 							label: "Territorial Authority",
 							type: "multiselect",
 							options: [
@@ -1925,6 +1956,7 @@ window.ENVINCIDENT_SURVEY = {
 					type: "boolean",
 					options: ["Yes", "No"],
 					value: "No",
+					defaultSource: "Workbook F258: No",
 					origin: "standard",
 										detail: "Same as all other surveys. This workbook includes the Reinspection Required and Reinspection Date fields.",
 										question: "The DRSS-3982 comment asks whether the Environmental Incident Reinspection has a separate workbook and/or Jira item. No reply is visible; confirm scope before designing the follow-up survey.",
@@ -1952,6 +1984,7 @@ window.ENVINCIDENT_SURVEY = {
 					type: "boolean",
 					options: ["Yes", "No"],
 					value: "Yes",
+					defaultSource: "Workbook F260: Yes",
 					mandatory: true,
 					origin: "standard"
 				},
@@ -1980,21 +2013,22 @@ window.ENVINCIDENT_SURVEY = {
 					type: "select",
 					options: ["Pending Completion", "Complete", "Complete and Send"],
 					value: "Pending Completion",
+					defaultSource: "Workbook F265: Pending Completion",
 					origin: "standard",
 					detail: "Same as all other surveys. Complete and Send is still on this sheet."
-								}
-						]
-				},
-				{
-					name: "Signatures",
-					origin: "standard",
-					detail: "Workbook strikes this standard block out. Retained because RSHL confirmed it cannot be removed for one survey without removing it for everyone; platform limitation, pending a platform change.",
-					fields: [
-						{ id: "officerSignature", label: "Officer Signature", type: "signature", origin: "standard" },
-						{ id: "customerSignature", label: "Customer Signature", type: "signature", origin: "standard" }
-					]
 				}
-		]
+			]
+		},
+		{
+			name: "Signatures",
+			origin: "standard",
+			detail: "Workbook strikes this standard block out. Retained because RSHL confirmed it cannot be removed for one survey without removing it for everyone; platform limitation, pending a platform change.",
+			fields: [
+				{ id: "officerSignature", label: "Officer Signature", type: "signature", origin: "standard" },
+				{ id: "customerSignature", label: "Customer Signature", type: "signature", origin: "standard" }
+			]
+		}
+	]
 };
 
 /*
@@ -2126,7 +2160,7 @@ window.ENVINCIDENT_SURVEY = {
 		const control = controlFor(field);
 		const parts = [TYPE_LABEL[field.type] || field.type];
 		if (field.options) parts.push(`${field.options.length} options`);
-		if (field.value) parts.push(`default “${optionLabel(field.value)}”`);
+		if (field.value) parts.push(`${field.defaultSource ? "default" : "example"} “${optionLabel(field.value)}”`);
 		if (field.example) parts.push(`example “${field.example}”`);
 		if (field.mandatory) parts.push("mandatory");
 		if (field.lookupOf) parts.push(`lookup of ${field.lookupOf}`);
@@ -2134,6 +2168,9 @@ window.ENVINCIDENT_SURVEY = {
 		notes.push({ kind: "type", text: parts.join(" · ") });
 
 		if (control.why) notes.push({ kind: "control", text: control.why });
+		if (field.workbookRow) notes.push({ kind: "detail", text: `Workbook row ${field.workbookRow}: Environmental Incident worksheet.` });
+		if (field.prefill) notes.push({ kind: "detail", text: `Pre-populated from: ${field.prefill}.` });
+		if (field.defaultSource) notes.push({ kind: "detail", text: `Default from: ${field.defaultSource}.` });
 		if (field.conditionText) notes.push({ kind: "cond", text: field.conditionText });
 		if (field.decision) notes.push({ kind: "decision", text: `Prototype decision: ${field.decision}` });
 		asList(field.platform).forEach((p) => {
@@ -2321,6 +2358,8 @@ window.ENVINCIDENT_SURVEY = {
 		engineeringMarkList(field).forEach((mark) => addEng(mark.n));
 		const chip = originChip(field.origin);
 		if (chip) row.appendChild(chip);
+		if (field.prefill) row.appendChild(el("span", "chip chip-prefill", `Pre-populated from: ${field.prefill}`));
+		if (field.defaultSource) row.appendChild(el("span", "chip chip-default", `Default from: ${field.defaultSource}`));
 		return row;
 	}
 
@@ -2717,6 +2756,7 @@ window.ENVINCIDENT_SURVEY = {
 
 	function buildField(field, scope) {
 		const wrap = el("div", `field field-${field.type}`);
+		wrap.dataset.fieldId = field.id;
 		// A heading is the platform's Label element: read-only text, no input beside it.
 		if (field.type === "heading") {
 			const ask = engineeringBox(field);
@@ -2861,17 +2901,13 @@ window.ENVINCIDENT_SURVEY = {
 		if (section.headless) {
 			wrap.classList.add("section-headless");
 		} else {
-			const head = el("button", "section-head");
-			head.type = "button";
+			const head = el("div", "section-head");
+			head.setAttribute("role", "heading");
+			head.setAttribute("aria-level", String(Math.min(depth + 2, 6)));
 			head.appendChild(el("span", "section-name", section.name));
 			const sectionChip = originChip(section.origin);
 			if (sectionChip) head.appendChild(sectionChip);
-			head.appendChild(el("span", "toggle", toggleLabel(false, section.name)));
 			wrap.appendChild(head);
-			head.addEventListener("click", () => {
-				const collapsed = body.classList.toggle("collapsed");
-				head.querySelector(".toggle").textContent = toggleLabel(collapsed, section.name);
-			});
 		}
 
 		/*
