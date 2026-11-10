@@ -1627,12 +1627,8 @@ window.ENVINCIDENT_SURVEY = {
 				},
 				{
 					name: "Location",
-					detail: "The officer enters Label and Description; Observation date and Survey code are managed GIS attributes. Their source pills distinguish a confirmed source from an unanswered requirement.",
-					    gis: [
-						    "Observation date: auto-populated, required, sent to GIS. Its source is not specified in workbook Locations rows 4, 8 and 12; the format is written as DDMMYYY 00:00. Confirm the source field and intended date format; do not assume Incident Date/Time, survey date, or Actual Start Date.",
-						    "Survey code: auto-populated from the Datascape survey number and sent to GIS. These are managed location attributes, not officer-entered fields."
-					    ],
-									question: "DRSS-4062 lists Incident - Point, Incident - Line, and Incident - Polygon but marks Datascape templating as Not Yet. Confirm these templates are available and that the required Observation date and Survey code are populated and sent to GIS for every saved location.",
+					detail: "Enter Label and Description for each incident location.",
+					question: "RSHL: The workbook's Locations tab lists Observation date and Survey code as auto-populated for incident locations. Which field should Observation date come from? Please also confirm that Survey code should use the Datascape survey number, as noted in that tab.",
 					repeaters: [
 						{
 							id: "incidentPoints",
@@ -1644,9 +1640,7 @@ window.ENVINCIDENT_SURVEY = {
 							fields: [
 								{ id: "incidentPoint", label: "Incident Location", type: "spatial", geometry: "Multi-point", origin: "new" },
 								{ id: "locationLabel", label: "Label", type: "text", mandatory: true, origin: "new" },
-								{ id: "locationDescription", label: "Description", type: "text", origin: "new" },
-								{ id: "observationDate", label: "Observation date", type: "readonly", mandatory: true, origin: "new", prefill: "Source not specified in workbook", question: "Locations row 4 requires auto-population and GIS transfer, but does not identify a source date. Confirm the source and the written DDMMYYY 00:00 format." },
-								{ id: "surveyCode", label: "Survey code", type: "readonly", origin: "new", prefill: "Datascape survey number", detail: "Locations row 5: populated from the Datascape survey number and sent to GIS." }
+								{ id: "locationDescription", label: "Description", type: "text", origin: "new" }
 							]
 						},
 						{
@@ -1659,9 +1653,7 @@ window.ENVINCIDENT_SURVEY = {
 							fields: [
 								{ id: "incidentLine", label: "Incident Location", type: "spatial", geometry: "Multi-line", origin: "new" },
 								{ id: "locationLabel", label: "Label", type: "text", mandatory: true, origin: "new" },
-								{ id: "locationDescription", label: "Description", type: "text", origin: "new" },
-								{ id: "observationDate", label: "Observation date", type: "readonly", mandatory: true, origin: "new", prefill: "Source not specified in workbook", question: "Locations row 8 requires auto-population and GIS transfer, but does not identify a source date. Confirm the source and the written DDMMYYY 00:00 format." },
-								{ id: "surveyCode", label: "Survey code", type: "readonly", origin: "new", prefill: "Datascape survey number", detail: "Locations row 9: populated from the Datascape survey number and sent to GIS." }
+								{ id: "locationDescription", label: "Description", type: "text", origin: "new" }
 							]
 						},
 						{
@@ -1674,9 +1666,7 @@ window.ENVINCIDENT_SURVEY = {
 							fields: [
 								{ id: "incidentPolygon", label: "Incident Location", type: "spatial", geometry: "Multi-polygon", origin: "new" },
 								{ id: "locationLabel", label: "Label", type: "text", mandatory: true, origin: "new" },
-								{ id: "locationDescription", label: "Description", type: "text", origin: "new" },
-								{ id: "observationDate", label: "Observation date", type: "readonly", mandatory: true, origin: "new", prefill: "Source not specified in workbook", question: "Locations row 12 requires auto-population and GIS transfer, but does not identify a source date. Confirm the source and the written DDMMYYY 00:00 format." },
-								{ id: "surveyCode", label: "Survey code", type: "readonly", origin: "new", prefill: "Datascape survey number", detail: "Locations row 13: populated from the Datascape survey number and sent to GIS." }
+								{ id: "locationDescription", label: "Description", type: "text", origin: "new" }
 							]
 						}
 					]
@@ -1840,7 +1830,7 @@ window.ENVINCIDENT_SURVEY = {
 							origin: "wording",
 							detail: "Starts on Site visit investigation. Replaces the value already on the incident.",
 							mapsTo: "INC - Response type",
-							question: "Workbook K218 asks whether Referred to External Authority/Agency should appear in both Response Type (4l, one choice) and Incident Outcome (4h, multiple choices). Both remain because neither option is struck out. RSHL needs to confirm whether to retain both or remove one; no duplication rule has been agreed."
+							question: "RSHL: Should 'Referred to External Authority/Agency' be available under both Response Type and Incident Outcome, or only one? If only one, which field should contain it?"
 						},
 						{
 							id: "breach",
@@ -1942,8 +1932,7 @@ window.ENVINCIDENT_SURVEY = {
 					value: "No",
 					defaultSource: "Workbook F258: No",
 					origin: "standard",
-										detail: "Same as all other surveys. This workbook includes the Reinspection Required and Reinspection Date fields.",
-										question: "The DRSS-3982 comment asks whether the Environmental Incident Reinspection has a separate workbook and/or Jira item. No reply is visible; confirm scope before designing the follow-up survey.",
+					detail: "Heather confirmed there is no Reinspection survey for now.",
 					mapsTo: "JRB - Reinspection Booking and Date"
 				},
 				{
