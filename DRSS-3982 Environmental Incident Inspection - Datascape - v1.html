@@ -200,6 +200,10 @@ body.spec-off .part-removed { display: none; }
 */
 .part-head .toggle, .section-head .toggle {
 	margin-left: auto;
+	display: inline-flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 5px;
 	flex: none;
 	font-size: 11px;
 	font-weight: 700;
@@ -713,6 +717,8 @@ body.spec-off .repeater-head { margin-bottom: 2px; }
 .ds-clear { position: absolute; right: 25px; top: 0; bottom: 0; border: 0; background: transparent; color: #626568; cursor: pointer; }
 .ds-media { min-width: 0; }
 .ds-media-list { display: grid; gap: 8px; margin-bottom: 10px; }
+.ds-media-list:empty { display: none; margin-bottom: 0; }
+.surface-desk .field-media { gap: 4px; }
 .ds-media-row { display: grid; grid-template-columns: minmax(180px, 267px) minmax(0, 1fr) 32px; gap: 12px; padding: 12px; border: 1px solid #d4d4d6; background: #fcfcfc; min-height: 166px; }
 .ds-media-preview { width: 267px; height: 134px; min-width: 0; min-height: 134px; align-self: start; display: grid; place-items: center; align-content: start; gap: 8px; border: 1px solid #d4d4d6; background: #fff; }
 .ds-media-preview img, .ds-media-preview video { width: 100%; max-height: 110px; object-fit: contain; }
@@ -726,15 +732,15 @@ body.spec-off .repeater-head { margin-bottom: 2px; }
 .ds-media-drop { color: #45494c; font-size: 10px; }
 .ds-media-remove { align-self: stretch; display: grid; place-items: center; border: 0; border-left: 1px solid #d4d4d6; background: transparent; color: #00bce2; cursor: pointer; }
 .ds-media-remove .ds-media-icon { width: 14px; height: 14px; }
-.ds-media-pager { display: flex; align-items: center; gap: 14px; min-height: 58px; padding: 6px 12px; color: #777d82; font-size: var(--ds-input-font); }
-.ds-media-pager button { min-width: 34px; min-height: 36px; border: 0; background: transparent; color: #45494c; font-size: var(--ds-input-font); cursor: pointer; }
+.ds-media-pager { display: flex; align-items: center; gap: 4px; min-height: 37px; padding: 4px 0; color: #777d82; font-size: 11.2px; line-height: 14.25px; }
+.ds-media-pager button { min-width: 20px; min-height: 24px; padding: 4px; border: 0; background: transparent; color: #45494c; font-size: 11.2px; line-height: 14.25px; cursor: pointer; }
 .ds-media-pager button:disabled { color: #c7c9cb; cursor: default; }
-.ds-media-page-current { min-width: 34px; padding: 8px 10px; border-radius: 4px; background: #f0f0f2; text-align: center; }
-.ds-media-page-summary { white-space: nowrap; }
-.ds-media-page-sizes { display: flex; align-items: center; gap: 10px; margin-left: auto; }
-.ds-media-page-sizes button { min-width: 32px; padding: 0 4px; }
+.ds-media-page-current { min-width: 20px; padding: 4px; border-radius: 4px; background: #f0f0f2; text-align: center; }
+.ds-media-page-summary { white-space: nowrap; margin: 0 4px; }
+.ds-media-page-sizes { display: flex; align-items: center; gap: 2px; margin-left: auto; }
+.ds-media-page-sizes button { min-width: 20px; padding: 4px; }
 .ds-media-page-sizes button.selected { background: #f0f0f2; color: #8c9094; }
-.ds-media-add { margin-top: 2px; }
+.ds-media-add { margin-top: 0; font-size: 10px; line-height: 18px; padding: 6px 10px; }
 @media (max-width: 700px) {
 	.ds-media-row { grid-template-columns: minmax(0, 1fr) 32px; gap: 8px; padding: 10px; min-height: 0; }
 	.ds-media-preview { grid-column: 1 / -1; width: 100%; height: 134px; min-height: 134px; }
@@ -742,8 +748,7 @@ body.spec-off .repeater-head { margin-bottom: 2px; }
 	.ds-media-action { min-height: 30px; padding: 6px; font-size: 10px; }
 	.ds-media-drop { flex-basis: 100%; }
 	.ds-media-remove { grid-column: 2; grid-row: 2; border-left: 0; }
-	.ds-media-pager { flex-wrap: wrap; gap: 6px; padding: 6px 0; }
-	.ds-media-page-sizes { flex-basis: 100%; margin-left: 0; justify-content: space-between; }
+	.ds-media-pager { flex-wrap: wrap; gap: 4px; }
 }
 
 /* ================= DESK SURFACE ================= */
@@ -1694,7 +1699,7 @@ window.ENVINCIDENT_SURVEY = {
 								{ id: "rainfall", label: "Rainfall", type: "select", options: ["Medium", "Heavy", "Light"], origin: "standard", detail: "Existing DSCREGRainfall options retained; workbook requests no change." },
 								{ id: "windDirection", label: "Wind Direction", type: "select", options: ["E", "N", "NE", "NW", "S", "SE", "SW", "W"], origin: "standard", detail: "Existing DSCREGWindDirection options retained; workbook requests no change." },
 								{ id: "windStrength", label: "Wind Strength", type: "select", options: ["Medium", "Light", "Strong"], origin: "standard", detail: "Existing DSCREGWindStrength options retained; workbook requests no change." },
-								{ id: "otherWeather", label: "Other Weather Conditions", type: "textarea", origin: "standard" }
+								{ id: "otherWeather", label: "Other Weather Conditions", type: "select", options: ["Fog", "Inversion Layer", "High Humidity (>90%)"], origin: "standard", detail: "Survey-8310-92 confirms the existing Select control. Options retained from DSCREGOtherWeatherConditions; workbook requests no change." }
 							]
 						}
 					]
@@ -1838,10 +1843,10 @@ window.ENVINCIDENT_SURVEY = {
 									label: "Date of Birth",
 									workbookRow: "4f",
 									type: "date",
-									origin: "new",
+									origin: "existing",
 									conditionText: "IF Relationship Type = Alleged Offender",
 									showWhen: { field: "relationshipType", equals: "Alleged Offender" },
-									detail: "Environmental Incident worksheet row 83 (4f): a Date field in each Contact repeater, shown only for Relationship Type Alleged Offender."
+									detail: "Existing Date field verified in live Survey-8310-92: Survey Contact DOB. Environmental Incident worksheet row 83 (4f) retains it in each Contact repeater, shown only for Relationship Type Alleged Offender."
 								}
 							]
 						}
@@ -3183,6 +3188,17 @@ window.ENVINCIDENT_SURVEY = {
 		return `${collapsed ? "show" : "hide"} ${name}`;
 	}
 
+	function updateVisibilityToggle(head, collapsed, name) {
+		const control = head.querySelector(".toggle");
+		const label = toggleLabel(collapsed, name);
+		control.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/><path class="eye-slash" d="m2 2 20 20"/></svg>';
+		control.querySelector(".eye-slash").style.display = collapsed ? "none" : "";
+		control.querySelector("svg").setAttribute("data-visibility", collapsed ? "show" : "hide");
+		control.appendChild(document.createTextNode(label));
+		head.title = label;
+		head.setAttribute("aria-expanded", String(!collapsed));
+	}
+
 	function buildSection(section, depth, scope) {
 		const wrap = el("section", `section depth-${depth}`);
 		if (section.horizontal) wrap.classList.add("weather-variables");
@@ -3323,6 +3339,7 @@ window.ENVINCIDENT_SURVEY = {
 		const partChip = originChip(part.origin);
 		if (partChip) head.appendChild(partChip);
 		head.appendChild(el("span", "toggle", toggleLabel(false, part.name)));
+		updateVisibilityToggle(head, false, part.name);
 		wrap.appendChild(head);
 
 		const body = el("div", "part-body");
@@ -3331,8 +3348,7 @@ window.ENVINCIDENT_SURVEY = {
 		head.setAttribute("aria-expanded", "true");
 		head.addEventListener("click", () => {
 			const collapsed = body.classList.toggle("collapsed");
-			head.querySelector(".toggle").textContent = toggleLabel(collapsed, part.name);
-			head.setAttribute("aria-expanded", String(!collapsed));
+			updateVisibilityToggle(head, collapsed, part.name);
 		});
 
 		/*

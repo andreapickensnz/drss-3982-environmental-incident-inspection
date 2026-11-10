@@ -1585,7 +1585,7 @@ window.ENVINCIDENT_SURVEY = {
 								{ id: "rainfall", label: "Rainfall", type: "select", options: ["Medium", "Heavy", "Light"], origin: "standard", detail: "Existing DSCREGRainfall options retained; workbook requests no change." },
 								{ id: "windDirection", label: "Wind Direction", type: "select", options: ["E", "N", "NE", "NW", "S", "SE", "SW", "W"], origin: "standard", detail: "Existing DSCREGWindDirection options retained; workbook requests no change." },
 								{ id: "windStrength", label: "Wind Strength", type: "select", options: ["Medium", "Light", "Strong"], origin: "standard", detail: "Existing DSCREGWindStrength options retained; workbook requests no change." },
-								{ id: "otherWeather", label: "Other Weather Conditions", type: "textarea", origin: "standard" }
+								{ id: "otherWeather", label: "Other Weather Conditions", type: "select", options: ["Fog", "Inversion Layer", "High Humidity (>90%)"], origin: "standard", detail: "Survey-8310-92 confirms the existing Select control. Options retained from DSCREGOtherWeatherConditions; workbook requests no change." }
 							]
 						}
 					]
@@ -1729,10 +1729,10 @@ window.ENVINCIDENT_SURVEY = {
 									label: "Date of Birth",
 									workbookRow: "4f",
 									type: "date",
-									origin: "new",
+									origin: "existing",
 									conditionText: "IF Relationship Type = Alleged Offender",
 									showWhen: { field: "relationshipType", equals: "Alleged Offender" },
-									detail: "Environmental Incident worksheet row 83 (4f): a Date field in each Contact repeater, shown only for Relationship Type Alleged Offender."
+									detail: "Existing Date field verified in live Survey-8310-92: Survey Contact DOB. Environmental Incident worksheet row 83 (4f) retains it in each Contact repeater, shown only for Relationship Type Alleged Offender."
 								}
 							]
 						}
