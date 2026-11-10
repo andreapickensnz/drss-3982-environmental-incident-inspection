@@ -1415,7 +1415,6 @@ body.record .add .add-icon { font-size: 16px; line-height: 1; font-weight: 400; 
 .ds-toggle-label { font-size: 13px; color: #1c1c1d; }
 
 	.chip-prefill { background: #e2f3ee; color: #155347; border: 1px solid #a9d2c8; white-space: normal; max-width: 100%; overflow-wrap: anywhere; }
-	.chip-default { background: #edf2f7; color: #34485c; border: 1px solid #c7d2df; white-space: normal; max-width: 100%; overflow-wrap: anywhere; }
 	.surface-desk .weather-variables > .section-body { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
 	.surface-desk .weather-variables > .section-body > .field { grid-column: auto; min-width: 0; }
 	.surface-desk .weather-variables .field .label { min-height: 28px; }
@@ -1518,17 +1517,9 @@ window.ENVINCIDENT_SURVEY = {
 		csv: "DRSS-3982 Environmental Incident Inspection-3.xlsx",
 		headsUp: [],
 
-		routing: "DRSS-3979 master list revision 4: Activity Type: Incident Inspection. Subtype: Environmental. In Incidents and Enforcement row 31, this is the default survey for RMA incident, available as Add Part and available for ad hoc capture. Surveys row 87 marks it active, Ready for Datacom, FWA Job Type Incident (NZ Regional Ad-hoc Incident), with location capture Yes. Activity Types row 76 marks it Expense and Send to FW: Yes, user defined only. The survey workbook includes Contact Management Request, Location Management request, Odour Survey, and Sampling as Add Part choices; the master mapping rows 32-34 list Odour survey, Sampling, and Contact Management Request. Location Management request is in the survey workbook but not listed in those master mapping rows. Planned and ad hoc inspections use the same section order.",
+		routing: "Open an RMA incident's Incident Inspection activity (Environmental subtype); this survey is included automatically. You can also add it using Add Part or start an ad hoc inspection in Fieldwork.",
 
 		readerNotes: [
-			{
-				heading: "Planned and ad hoc use this same order.",
-				text: "The ticket asks for one section order whether the inspection was planned or started in the field. Text and multi-select answers add to what is already on the incident. A single select replaces what is already there."
-			},
-			{
-				heading: "Workbook coverage and pre-population.",
-				text: "Rows 4i-4p are in General Information. Date of Birth is in Contact, row 4f, and appears when Relationship Type is Alleged Offender. Spec notes identify workbook row references. Pre-population and default pills name their sources; no date source has been invented for Observation date. Only SECTION headings have hide/show controls, not SUB SECTION headings."
-			},
 			{
 				heading: "Crossed-out rows are omitted, with one platform exception.",
 				text: "Primary Officer, the old warrant options, the further-action yes/no, and Coastal Structure Inspection are removed. The workbook strikes out the standard Signatures block, but RSHL confirmed in the DRSS-1197 comments that it cannot be removed for one survey without removing it for everyone; retain it pending a platform change. Customer signatures under informed consent and search warrant remain separately."
@@ -1846,7 +1837,7 @@ window.ENVINCIDENT_SURVEY = {
 									origin: "existing",
 									conditionText: "IF Relationship Type = Alleged Offender",
 									showWhen: { field: "relationshipType", equals: "Alleged Offender" },
-									detail: "Existing Date field verified in live Survey-8310-92: Survey Contact DOB. Environmental Incident worksheet row 83 (4f) retains it in each Contact repeater, shown only for Relationship Type Alleged Offender."
+									detail: "Existing Date field in each Contact repeater, shown only when Relationship Type is Alleged Offender."
 								}
 							]
 						}
@@ -2274,7 +2265,7 @@ window.ENVINCIDENT_SURVEY = {
 		const control = controlFor(field);
 		const parts = [TYPE_LABEL[field.type] || field.type];
 		if (field.options) parts.push(`${field.options.length} options`);
-		if (field.value) parts.push(`${field.defaultSource ? "default" : "example"} “${optionLabel(field.value)}”`);
+		if (field.value && !field.defaultSource) parts.push(`example “${optionLabel(field.value)}”`);
 		if (field.example) parts.push(`example “${field.example}”`);
 		if (field.mandatory) parts.push("mandatory");
 		if (field.lookupOf) parts.push(`lookup of ${field.lookupOf}`);
@@ -2282,9 +2273,7 @@ window.ENVINCIDENT_SURVEY = {
 		notes.push({ kind: "type", text: parts.join(" · ") });
 
 		if (control.why) notes.push({ kind: "control", text: control.why });
-		if (field.workbookRow) notes.push({ kind: "detail", text: `Workbook row ${field.workbookRow}: Environmental Incident worksheet.` });
 		if (field.prefill) notes.push({ kind: "detail", text: `Pre-populated from: ${field.prefill}.${field.prefill.includes("(planned only)") ? " Planned incident values remain editable; ad hoc incident values start blank." : ""}` });
-		if (field.defaultSource) notes.push({ kind: "detail", text: `Default from: ${field.defaultSource}.` });
 		if (field.conditionText) notes.push({ kind: "cond", text: field.conditionText });
 		if (field.decision) notes.push({ kind: "decision", text: `Prototype decision: ${field.decision}` });
 		asList(field.platform).forEach((p) => {
@@ -2486,7 +2475,6 @@ window.ENVINCIDENT_SURVEY = {
 
 	function appendSourceChips(row, field) {
 		if (field.prefill) row.appendChild(el("span", "chip chip-prefill", `Pre-populated from: ${field.prefill}`));
-		if (field.defaultSource) row.appendChild(el("span", "chip chip-default", `Default from: ${field.defaultSource}`));
 	}
 
 	function inputControl(field, scope) {
