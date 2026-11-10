@@ -1628,7 +1628,13 @@ window.ENVINCIDENT_SURVEY = {
 				{
 					name: "Location",
 					detail: "Enter Label and Description for each incident location.",
-					question: "RSHL: The workbook's Locations tab lists Observation date and Survey code as auto-populated for incident locations. Which field should Observation date come from? Please also confirm that Survey code should use the Datascape survey number, as noted in that tab.",
+					question: [
+						{ text: "RSHL: The workbook's Locations tab lists Observation date as auto-populated for incident locations. Which field should Observation date come from?" },
+						{
+							lead: "Datacom Engineering to confirm (open question):",
+							text: "Can Survey Code be populated from the standard Datascape survey number using existing location-attribute mapping, including Fieldwork sync and GIS export?"
+						}
+					],
 					repeaters: [
 						{
 							id: "incidentPoints",
@@ -1829,8 +1835,7 @@ window.ENVINCIDENT_SURVEY = {
 							defaultSource: "Workbook F215: Site Visit Investigation",
 							origin: "wording",
 							detail: "Starts on Site visit investigation. Replaces the value already on the incident.",
-							mapsTo: "INC - Response type",
-							question: "RSHL: Should 'Referred to External Authority/Agency' be available under both Response Type and Incident Outcome, or only one? If only one, which field should contain it?"
+							mapsTo: "INC - Response type"
 						},
 						{
 							id: "breach",
