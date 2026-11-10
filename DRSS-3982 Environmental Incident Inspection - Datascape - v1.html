@@ -2108,12 +2108,10 @@ window.ENVINCIDENT_SURVEY = {
 		},
 		{
 			name: "Signatures",
-			origin: "standard",
-			detail: "Workbook strikes this standard block out. Retained because RSHL confirmed it cannot be removed for one survey without removing it for everyone; platform limitation, pending a platform change.",
-			fields: [
-				{ id: "officerSignature", label: "Officer Signature", type: "signature", origin: "standard" },
-				{ id: "customerSignature", label: "Customer Signature", type: "signature", origin: "standard" }
-			]
+			origin: "removed",
+			removed: true,
+			detail: "Datacom has committed to removing the standard Signatures block from this survey.",
+			fields: []
 		}
 	]
 };
@@ -2135,7 +2133,7 @@ window.ENVINCIDENT_SURVEY = {
 		moved: { label: "Moved", hint: "The field stays, its position changes" },
 		toLocation: { label: "Now on location", hint: "Moves off the survey onto the GIS location record" },
 		existing: { label: "Existing", hint: "Already configured in the environment" },
-		removed: { label: "Removal requested", hint: "RSHL ask for this to go, but the removal is not settled" }
+		removed: { label: "Removed", hint: "Committed removal from this survey" }
 	};
 
 	const TYPE_LABEL = {
@@ -3298,9 +3296,7 @@ window.ENVINCIDENT_SURVEY = {
 	function buildPart(part, movedFrom) {
 		const wrap = el("article", "part");
 		/*
-			RSHL have asked for this part to go, but the removal is not agreed. It stays on
-			screen struck through so reviewers can see what is being argued about, in the same
-			way an inactive conditional block stays visible greyed rather than disappearing.
+			Committed removals remain visible only in Spec notes for review.
 		*/
 		if (part.removed) wrap.classList.add("part-removed");
 		const head = el("button", "part-head");
@@ -3503,7 +3499,7 @@ window.ENVINCIDENT_SURVEY = {
 		*/
 		const list = el("div", "fw-indexlist");
 		mount.querySelectorAll(".part, .section, :scope > .repeater").forEach((node) => {
-			if (node.classList.contains("section-held")) return;
+			if (node.classList.contains("section-held") || node.classList.contains("part-removed")) return;
 			const label = node.classList.contains("repeater")
 				? node.querySelector("h4")
 				: node.querySelector(".part-name, .section-name");
