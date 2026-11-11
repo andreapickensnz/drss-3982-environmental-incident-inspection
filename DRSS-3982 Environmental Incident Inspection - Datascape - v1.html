@@ -1510,7 +1510,6 @@ window.ENVINCIDENT_SURVEY = {
 	parts: [
 		{
 			name: "Environmental Incident Inspection",
-			origin: "wording",
 			sections: [
 				{
 					name: "In Attendance",
@@ -1519,7 +1518,8 @@ window.ENVINCIDENT_SURVEY = {
 							id: "inAttendance",
 							label: "In Attendance",
 							type: "text",
-							origin: "wording",
+							origin: "existing",
+							wordingEdit: true,
 							detail: "Updated after meeting with Datacom 29 April."
 						}
 					]
@@ -1531,7 +1531,7 @@ window.ENVINCIDENT_SURVEY = {
 							name: "Warrant Shown",
 							headless: true,
 							fields: [
-								{ id: "warrantShown", label: "Warrant Shown", type: "boolean", options: ["Yes", "No"], value: "Yes", defaultSource: "Workbook F11: Yes", mandatory: true, origin: "wording", detail: "Yes/No. Same as other surveys." }
+								{ id: "warrantShown", label: "Warrant Shown", type: "boolean", options: ["Yes", "No"], value: "Yes", defaultSource: "Workbook F11: Yes", mandatory: true, origin: "existing", wordingEdit: true, detail: "Yes/No. Same as other surveys." }
 							]
 						},
 						{
@@ -1625,7 +1625,8 @@ window.ENVINCIDENT_SURVEY = {
 							label: "Incident Description",
 							type: "text",
 							mandatory: true,
-							origin: "wording",
+							origin: "existing",
+							wordingEdit: true,
 							prefill: "INC - Description (planned only)",
 							detail: "The old field name Comments is crossed out. Pre-filled on a planned inspection and left blank on an ad hoc inspection. Can be edited. Replaces the description already on the incident.",
 							mapsTo: "INC - Description"
@@ -1655,15 +1656,15 @@ window.ENVINCIDENT_SURVEY = {
 							id: "requiredActions",
 							name: "Required Action",
 							addText: "Add required action",
-							origin: "wording",
+							origin: "new",
 							platform: {
 								lead: "Platform limitation:",
 								text: "On the Fieldwork app this block is drawn at the very bottom of the form. On the Datascape desktop it stays in this part."
 							},
 							detail: "The yes/no that used to open this block is crossed out. The sheet says a repeater does not need that question. Tooltip on the action: record specifics of who and what.",
 							fields: [
-								{ id: "requiredAction", label: "Required Action", type: "textarea", origin: "wording" },
-								{ id: "complyBy", label: "Must Comply By", type: "date", origin: "wording" }
+								{ id: "requiredAction", label: "Required Action", type: "textarea", origin: "new" },
+								{ id: "complyBy", label: "Must Comply By", type: "date", origin: "new" }
 							]
 						}
 					]
@@ -1744,7 +1745,8 @@ window.ENVINCIDENT_SURVEY = {
 										"Council Lawyer", "Dam Owner", "Defence Lawyer", "Judge", "Landowner",
 										"Law Firm", "Offender", "Prosecutor", "Recognised Engineer", "Reporter", "Witness"
 									],
-									origin: "wording"
+									origin: "existing",
+									wordingEdit: true
 								},
 								{
 									id: "dateOfBirth",
@@ -1762,7 +1764,8 @@ window.ENVINCIDENT_SURVEY = {
 				},
 				{
 					name: "General Information",
-					origin: "wording",
+					origin: "existing",
+					wordingEdit: true,
 					detail: "The old section name, Environmental Incident General Information, is crossed out.",
 					fields: [
 						{
@@ -1779,7 +1782,8 @@ window.ENVINCIDENT_SURVEY = {
 								"Recommend Enforcement",
 								"Referred to External Authority/Agency"
 							],
-							origin: "wording",
+							origin: "existing",
+							wordingEdit: true,
 							detail: "Adds to the incident outcome.",
 							mapsTo: "INC - Incident Outcome"
 						},
@@ -1788,7 +1792,8 @@ window.ENVINCIDENT_SURVEY = {
 							workbookRow: "4i",
 							label: "Incident Classification",
 							type: "multiselect",
-							origin: "wording",
+							origin: "existing",
+							wordingEdit: true,
 							mapsTo: "INC - Environmental Classification",
 							detail: "Adds to the incident classification.",
 							options: [
@@ -1842,7 +1847,8 @@ window.ENVINCIDENT_SURVEY = {
 							label: "Any Species Affected?",
 							type: "select",
 							options: ["Yes", "No", "Unsure"],
-							origin: "wording",
+							origin: "existing",
+							wordingEdit: true,
 							detail: "The old wording “Any species Are Affected” is crossed out."
 						},
 						{
@@ -1870,7 +1876,8 @@ window.ENVINCIDENT_SURVEY = {
 							],
 							value: "Site Visit Investigation",
 							defaultSource: "Workbook F215: Site Visit Investigation",
-							origin: "wording",
+							origin: "existing",
+							wordingEdit: true,
 							detail: "Starts on Site visit investigation. Replaces the value already on the incident.",
 							mapsTo: "INC - Response type"
 						},
@@ -1905,7 +1912,8 @@ window.ENVINCIDENT_SURVEY = {
 							workbookRow: "4n",
 							label: "Environmental Impact Comments",
 							type: "textarea",
-							origin: "wording",
+							origin: "existing",
+							wordingEdit: true,
 							detail: "The old field name “Comments” is crossed out. Replaces the comments already on the incident. A separate ticket asks to rename the incident field to match.",
 							mapsTo: "INC - Environmental impact comments"
 						},
@@ -1945,7 +1953,8 @@ window.ENVINCIDENT_SURVEY = {
 								"Queenstown-Lakes District Council",
 								"Waitaki District Council"
 							],
-							origin: "wording",
+							origin: "existing",
+							wordingEdit: true,
 							detail: "Alphabetical. The sheet says the list is finished for each council at implementation. Adds to the incident.",
 							mapsTo: "INC - Territorial Authority",
 							question: { lead: "RSHL to confirm open question:", text: "The workbook says the Territorial Authority list still needs to be finalised at implementation. Are these five district council options complete for the council?" }
@@ -1990,6 +1999,7 @@ window.ENVINCIDENT_SURVEY = {
 		},
 	]
 };
+
 
 
 
@@ -2305,12 +2315,19 @@ window.ENVINCIDENT_SURVEY = {
 
 	/* ---------- controls ---------- */
 
-	function originChip(origin) {
-		const meta = ORIGIN[origin];
-		if (!meta) return null;
-		const chip = el("span", `chip chip-${origin}`, meta.label);
-		chip.title = meta.hint;
-		return chip;
+	function originChip(item) {
+		const origins = [];
+		if (ORIGIN[item.origin]) origins.push(item.origin);
+		if (item.wordingEdit && item.origin !== "wording") origins.push("wording");
+		if (!origins.length) return null;
+		const chips = document.createDocumentFragment();
+		origins.forEach((origin) => {
+			const meta = ORIGIN[origin];
+			const chip = el("span", `chip chip-${origin}`, meta.label);
+			chip.title = meta.hint;
+			chips.appendChild(chip);
+		});
+		return chips;
 	}
 
 	function labelRow(field) {
@@ -2327,7 +2344,7 @@ window.ENVINCIDENT_SURVEY = {
 		};
 		asList(field.eng).forEach(addEng);
 		engineeringMarkList(field).forEach((mark) => addEng(mark.n));
-		const chip = originChip(field.origin);
+		const chip = originChip(field);
 		if (chip) row.appendChild(chip);
 		appendSourceChips(row, field);
 		return row;
@@ -2395,7 +2412,7 @@ window.ENVINCIDENT_SURVEY = {
 		row.appendChild(btn);
 		row.appendChild(val);
 		row.appendChild(caption);
-		const chip = originChip(field.origin);
+		const chip = originChip(field);
 		if (chip) row.appendChild(chip);
 		appendSourceChips(row, field);
 		return row;
@@ -2817,7 +2834,7 @@ window.ENVINCIDENT_SURVEY = {
 		btn.appendChild(document.createTextNode(field.label.replace(/^\+\s*/, "")));
 		row.appendChild(btn);
 		if (field.mandatory) row.appendChild(el("span", "req", "*"));
-		const chip = originChip(field.origin);
+		const chip = originChip(field);
 		if (chip) row.appendChild(chip);
 		return row;
 	}
@@ -2899,7 +2916,7 @@ window.ENVINCIDENT_SURVEY = {
 			const ask = engineeringBox(field);
 			if (ask) wrap.appendChild(ask);
 			wrap.appendChild(el("h5", "row-heading", field.label));
-			const chip = originChip(field.origin);
+			const chip = originChip(field);
 			if (chip) wrap.querySelector(".row-heading").appendChild(chip);
 			wrap.appendChild(renderSpec(field));
 			wrap.classList.add("is-wide");
@@ -2964,7 +2981,7 @@ window.ENVINCIDENT_SURVEY = {
 		const fixedCount = Number(repeater.fixed) || 0;
 		const head = el("div", "repeater-head");
 		head.appendChild(el("h4", null, repeater.name));
-		const repChip = originChip(repeater.origin);
+		const repChip = originChip(repeater);
 		if (repChip) head.appendChild(repChip);
 		head.appendChild(el("span", "chip chip-rep", fixedCount ? "Fixed" : "Repeater"));
 		wrap.appendChild(head);
@@ -3058,7 +3075,7 @@ window.ENVINCIDENT_SURVEY = {
 			head.setAttribute("role", "heading");
 			head.setAttribute("aria-level", String(Math.min(depth + 2, 6)));
 			head.appendChild(el("span", "section-name", section.name));
-			const sectionChip = originChip(section.origin);
+			const sectionChip = originChip(section);
 			if (sectionChip) head.appendChild(sectionChip);
 			wrap.appendChild(head);
 		}
@@ -3182,7 +3199,7 @@ window.ENVINCIDENT_SURVEY = {
 		const head = el("button", "part-head");
 		head.type = "button";
 		head.appendChild(el("span", "part-name", part.name));
-		const partChip = originChip(part.origin);
+		const partChip = originChip(part);
 		if (partChip) head.appendChild(partChip);
 		head.appendChild(el("span", "toggle", toggleLabel(false, part.name)));
 		updateVisibilityToggle(head, false, part.name);
