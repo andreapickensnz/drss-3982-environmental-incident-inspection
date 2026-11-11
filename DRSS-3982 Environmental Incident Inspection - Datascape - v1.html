@@ -1470,21 +1470,6 @@ body.record .add .add-icon { font-size: 16px; line-height: 1; font-weight: 400; 
 					<div><div class="k">Status</div><div class="v">In progress</div></div>
 				</div>
 
-				<p class="legend">
-					<span class="chip chip-new">New</span> new field, option or part
-					<span class="chip chip-wording">Wording edit</span> rename, new options or changed values
-					<span class="chip chip-existing">Existing</span> already built
-					<span class="chip chip-removed">Removed</span> struck through on the sheet
-					<span class="chip chip-rep">Repeater</span>
-				</p>
-				<p class="legend">
-					Grey note = field type and options · blue = why that control · amber = show-when condition ·
-					indigo = prototype decision · lilac = CSV detail · green = ERP mapping ·
-					orange = check with Datascape development, Product and the Fieldwork app team ·
-					red = unanswered question in the RSHL requirements.
-					Conditional blocks stay on screen while inactive so every option can be read.
-				</p>
-
 				<form id="survey-mount" autocomplete="off"></form>
 
 				<div class="form-actions">
@@ -1500,12 +1485,12 @@ body.record .add .add-icon { font-size: 16px; line-height: 1; font-weight: 400; 
 /*
 	DRSS-3982 Environmental Incident Inspection.
 
-	Built from "DRSS-3982 Environmental Incident Inspection-3.xlsx", read 3 November 2026.
-	Crossed-out rows and wording are omitted; partial strikethrough keeps only replacement text.
+	 Built from "DRSS-3982 Environmental Incident Inspection-4.xlsx", read 11 November 2026.
+	 Crossed-out rows, options, and sections are omitted.
 */
 window.ENVINCIDENT_SURVEY = {
 	meta: {
-		docTitle: "DRSS-3982 Environmental Incident Inspection · Datascape v1",
+		docTitle: "DRSS-3982 Environmental Incident Inspection - Datascape v1",
 		jira: "DRSS-3982",
 		jiraUrl: "https://datacomgroup.atlassian.net/browse/DRSS-3982",
 		surveyType: "Environmental Incident Inspection",
@@ -1514,7 +1499,7 @@ window.ENVINCIDENT_SURVEY = {
 		property: "Green Island industrial area",
 		officer: "H. Giles",
 		council: "ORC",
-		csv: "DRSS-3982 Environmental Incident Inspection-3.xlsx",
+		csv: "DRSS-3982 Environmental Incident Inspection-4.xlsx",
 		headsUp: [],
 
 		routing: "Open an RMA incident's Incident Inspection activity (Environmental subtype); this survey is included automatically. You can also add it using Add Part or start an ad hoc inspection in Fieldwork.",
@@ -1523,31 +1508,6 @@ window.ENVINCIDENT_SURVEY = {
 	},
 
 	parts: [
-		{
-			name: "Timesheet Start Date",
-			origin: "standard",
-			fields: [
-				{ id: "startDate", label: "Actual Start Date", type: "date", value: "2026-04-16", mandatory: true, origin: "standard", detail: "Same as all other surveys. On an ad hoc inspection this also maps to the incident known date and time.", mapsTo: "JRB - Actual date/time" },
-				{ id: "startTime", label: "Actual Start Time", type: "time", value: "09:15", mandatory: true, origin: "standard", detail: "Same as all other surveys. On an ad hoc inspection this also maps to the incident known date and time.", mapsTo: "JRB - Actual date/time" }
-			]
-		},
-		{
-			name: "Assets and Inventory",
-			origin: "standard",
-			fields: [
-				{ id: "addAsset", label: "Add Asset", type: "action", origin: "standard", detail: "Same as all other surveys.", mapsTo: "JRB - Assets" },
-				{ id: "addInventory", label: "Add Inventory", type: "action", origin: "standard", detail: "Same as all other surveys.", mapsTo: "JRB - Inventory" }
-			]
-		},
-		{
-			name: "General Visual Evidence",
-			origin: "standard",
-			fields: [
-				{ id: "photos", label: "Photos", type: "media", media: "photo", origin: "standard", detail: "Same as all other surveys." },
-				{ id: "videos", label: "Videos", type: "media", media: "video", origin: "standard", detail: "Same as all other surveys." },
-				{ id: "trackLog", label: "Track Log", type: "spatial", geometry: "Track log", origin: "standard", detail: "Same as all other surveys." }
-			]
-		},
 		{
 			name: "Environmental Incident Inspection",
 			origin: "wording",
@@ -1566,61 +1526,21 @@ window.ENVINCIDENT_SURVEY = {
 				},
 				{
 					name: "Authority",
-					fields: [
+					sections: [
 						{
-							id: "warrantShown",
-							label: "Warrant Shown",
-							type: "boolean",
-							options: ["Yes", "No"],
-							value: "Yes",
-							defaultSource: "Workbook F11: Yes",
-							mandatory: true,
-							origin: "wording",
-							detail: "Yes/No. The old True/False wording is crossed out. Same as other surveys."
+							name: "Warrant Shown",
+							headless: true,
+							fields: [
+								{ id: "warrantShown", label: "Warrant Shown", type: "boolean", options: ["Yes", "No"], value: "Yes", defaultSource: "Workbook F11: Yes", mandatory: true, origin: "wording", detail: "Yes/No. Same as other surveys." }
+							]
 						},
 						{
-							id: "informedConsent",
-							label: "Entry Under Informed Consent?",
-							type: "boolean",
-							options: ["Yes", "No"],
-							value: "No",
-							defaultSource: "Workbook F27: No",
-							origin: "new",
-							detail: "Defaults to No."
-						},
-						{
-							id: "consentSignature",
-							label: "Customer Signature",
-							type: "signature",
-							origin: "new",
-							conditionText: "IF Entry Under Informed Consent? = Yes",
-							showWhen: { field: "informedConsent", equals: "Yes" },
-							detail: "This signature stays. It is the consent signature, not the signature section at the end of the survey."
-						},
-						{
-							id: "searchWarrant",
-							label: "Entry Under Search warrant?",
-							type: "boolean",
-							options: ["Yes", "No"],
-							value: "No",
-							defaultSource: "Workbook F29: No",
-							origin: "new",
-							detail: "Defaults to No."
-						}
-					],
-					repeaters: [
-						{
-							id: "warrantShownTo",
 							name: "Warrant Shown to",
-							addText: "Add",
+							name: "Warrant Shown to",
 							origin: "new",
 							conditionText: "IF Warrant Shown = Yes",
 							showWhen: { field: "warrantShown", equals: "Yes" },
-							platform: {
-								lead: "Platform limitation:",
-								text: "On the Fieldwork app this block is drawn at the very bottom of the form. On the Datascape desktop it stays in this part."
-							},
-							detail: "Information only. Does not become a linked contact. The old sharemilker, landowner, site manager and notice-left options are crossed out.",
+							detail: "Information only. Does not become a linked contact.",
 							fields: [
 								{ id: "warrantContact", label: "Warrant Shown to Name", type: "lookup", lookupOf: "Contact", mandatory: true, origin: "new" },
 								{
@@ -1637,16 +1557,25 @@ window.ENVINCIDENT_SURVEY = {
 							]
 						},
 						{
-							id: "searchWarrantShownTo",
+							name: "Entry Under Informed Consent",
+							headless: true,
+							fields: [
+								{ id: "informedConsent", label: "Entry Under Informed Consent?", type: "boolean", options: ["Yes", "No"], value: "No", defaultSource: "Workbook F27: No", origin: "new", detail: "Defaults to No." },
+								{ id: "consentSignature", label: "Customer Signature", type: "signature", origin: "new", conditionText: "IF Entry Under Informed Consent? = Yes", showWhen: { field: "informedConsent", equals: "Yes" } }
+							]
+						},
+						{
+							name: "Entry Under Search warrant",
+							headless: true,
+							fields: [
+								{ id: "searchWarrant", label: "Entry Under Search warrant?", type: "boolean", options: ["Yes", "No"], value: "No", defaultSource: "Workbook F29: No", origin: "new", detail: "Defaults to No." }
+							]
+						},
+						{
 							name: "Search Warrant Shown to",
-							addText: "Add",
 							origin: "new",
 							conditionText: "IF Entry Under Search warrant? = Yes",
 							showWhen: { field: "searchWarrant", equals: "Yes" },
-							platform: {
-								lead: "Platform limitation:",
-								text: "On the Fieldwork app this block is drawn at the very bottom of the form. On the Datascape desktop it stays in this part."
-							},
 							detail: "Information only. Does not become a linked contact.",
 							fields: [
 								{ id: "searchContact", label: "Search Warrant Shown to Name", type: "lookup", lookupOf: "Contact", origin: "new" },
@@ -1743,7 +1672,6 @@ window.ENVINCIDENT_SURVEY = {
 					name: "Location",
 					detail: "Enter Label and Description for each incident location.",
 					question: [
-						{ lead: "RSHL to confirm open question:", text: "The workbook's Locations tab lists Observation date as auto-populated for incident locations. Which field should Observation date come from?" },
 						{
 							lead: "Datacom Engineering to confirm open question:",
 							text: "Can Survey Code be populated from the standard Datascape survey number using existing location-attribute mapping, synced through Fieldwork and sent to GIS?"
@@ -1833,7 +1761,9 @@ window.ENVINCIDENT_SURVEY = {
 					]
 				},
 				{
-					name: "Further actions",
+					name: "General Information",
+					origin: "wording",
+					detail: "The old section name, Environmental Incident General Information, is crossed out.",
 					fields: [
 						{
 							id: "incidentOutcome",
@@ -1850,16 +1780,9 @@ window.ENVINCIDENT_SURVEY = {
 								"Referred to External Authority/Agency"
 							],
 							origin: "wording",
-							detail: "Adds to the incident outcome. The combined “No further actions, Education” option and “Further investigation required” are crossed out.",
+							detail: "Adds to the incident outcome.",
 							mapsTo: "INC - Incident Outcome"
-						}
-					]
-				},
-				{
-					name: "General Information",
-					origin: "wording",
-					detail: "The old section name, Environmental Incident General Information, is crossed out.",
-					fields: [
+						},
 						{
 							id: "classification",
 							workbookRow: "4i",
@@ -2023,7 +1946,7 @@ window.ENVINCIDENT_SURVEY = {
 								"Waitaki District Council"
 							],
 							origin: "wording",
-							detail: "Alphabetical. Otago Regional Council is crossed out because it is not a territorial authority. The sheet says the list is finished for each council at implementation. Adds to the incident.",
+							detail: "Alphabetical. The sheet says the list is finished for each council at implementation. Adds to the incident.",
 							mapsTo: "INC - Territorial Authority",
 							question: { lead: "RSHL to confirm open question:", text: "The workbook says the Territorial Authority list still needs to be finalised at implementation. Are these five district council options complete for the council?" }
 						}
@@ -2034,36 +1957,9 @@ window.ENVINCIDENT_SURVEY = {
 		{
 			name: "Add Part",
 			origin: "standard",
-			detail: "Selections on this survey: Contact Management Request, Location Management request, Odour Survey, Sampling. Coastal Structure Inspection is crossed out and is not a selection.",
+			detail: "Selections on this survey: Contact Management Request, Location Management request, Odour Survey, Sampling.",
 			fields: [
 				{ id: "addPart", label: "+ Add Part", type: "action", origin: "standard" }
-			]
-		},
-		{
-			name: "Reinspection",
-			origin: "standard",
-			fields: [
-				{
-					id: "reinspectRequired",
-					label: "Reinspection Required",
-					type: "boolean",
-					options: ["Yes", "No"],
-					value: "No",
-					defaultSource: "Workbook F258: No",
-					origin: "standard",
-					detail: "Heather confirmed there is no Reinspection survey for now.",
-					mapsTo: "JRB - Reinspection Booking and Date"
-				},
-				{
-					id: "reinspectDate",
-					label: "Reinspection Date",
-					type: "date",
-					origin: "standard",
-					conditionText: "IF Reinspection Required = Yes",
-					showWhen: { field: "reinspectRequired", equals: "Yes" },
-					detail: "Same as all other surveys.",
-					mapsTo: "JRB - Reinspection Booking and Date"
-				}
 			]
 		},
 		{
@@ -2092,34 +1988,12 @@ window.ENVINCIDENT_SURVEY = {
 				}
 			]
 		},
-		{
-			name: "Timesheet End Date",
-			origin: "standard",
-			fields: [
-				{ id: "endDate", label: "Actual End Date", type: "date", value: "2026-04-16", mandatory: true, origin: "standard", detail: "Same as all other surveys.", mapsTo: "JRB - Actual date/time" },
-				{ id: "endTime", label: "Actual End Time", type: "time", value: "12:40", mandatory: true, origin: "standard", detail: "Same as all other surveys.", mapsTo: "JRB - Actual date/time" },
-				{ id: "endReason", label: "Reason", type: "text", origin: "standard", detail: "Same as all other surveys.", mapsTo: "JRB - Dates Reason" },
-				{
-					id: "completionBehaviour",
-					label: "Completion Behaviour",
-					type: "select",
-					options: ["Pending Completion", "Complete", "Complete and Send"],
-					value: "Pending Completion",
-					defaultSource: "Workbook F265: Pending Completion",
-					origin: "standard",
-					detail: "Same as all other surveys. Complete and Send is still on this sheet."
-				}
-			]
-		},
-		{
-			name: "Signatures",
-			origin: "removed",
-			removed: true,
-			detail: "Datacom has committed to removing the standard Signatures block from this survey.",
-			fields: []
-		}
 	]
 };
+
+
+
+
 
 /*
 	Shared renderer for the DRSS-4019 mocks.
