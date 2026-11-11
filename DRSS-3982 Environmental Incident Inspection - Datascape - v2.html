@@ -229,6 +229,7 @@ body.spec-off .part-removed { display: none; }
 	padding-left: 12px;
 	border-left: 2px dotted var(--indigo-soft);
 }
+.section.section-headless.depth-2 { margin-left: 0; padding-left: 0; border-left: 0; }
 .section-body { padding: 8px 0 4px; }
 .collapsed { display: none; }
 
@@ -1532,36 +1533,47 @@ window.ENVINCIDENT_SURVEY = {
 							headless: true,
 							fields: [
 								{ id: "warrantShown", label: "Warrant Shown", type: "boolean", options: ["Yes", "No"], value: "Yes", defaultSource: "Workbook F11: Yes", mandatory: true, origin: "existing", wordingEdit: true, detail: "Yes/No. Same as other surveys." }
-							]
-						},
-						{
-							name: "Warrant Shown to",
-							name: "Warrant Shown to",
-							origin: "new",
-							conditionText: "IF Warrant Shown = Yes",
-							showWhen: { field: "warrantShown", equals: "Yes" },
-							detail: "Information only. Does not become a linked contact.",
-							fields: [
-								{ id: "warrantContact", label: "Warrant Shown to Name", type: "lookup", lookupOf: "Contact", mandatory: true, origin: "new" },
+							],
+							sections: [
 								{
-									id: "warrantName",
-									label: "Warrant Shown to Name",
-									type: "text",
-									mandatory: true,
+									name: "Warrant Shown to",
 									origin: "new",
-									conditionText: "IF the contact is not in the lookup",
-								showWhen: { field: "warrantContact", filled: false },
-									detail: "Shown only when the officer cannot find the person in the contact list."
-								},
-								{ id: "warrantRelationship", label: "Warrant Shown to Relationship", type: "text", origin: "new" }
+									conditionText: "IF Warrant Shown = Yes",
+									showWhen: { field: "warrantShown", equals: "Yes" },
+									detail: "Information only. Does not become a linked contact.",
+									fields: [
+										{ id: "warrantContact", label: "Warrant Shown to Name", type: "lookup", lookupOf: "Contact", mandatory: true, origin: "new" },
+										{
+											id: "warrantName",
+											label: "Warrant Shown to Name",
+											type: "text",
+											mandatory: true,
+											origin: "new",
+											conditionText: "IF the contact is not in the lookup",
+											showWhen: { field: "warrantContact", filled: false },
+											detail: "Shown only when the officer cannot find the person in the contact list."
+										},
+										{ id: "warrantRelationship", label: "Warrant Shown to Relationship", type: "text", origin: "new" }
+									]
+								}
 							]
 						},
 						{
 							name: "Entry Under Informed Consent",
 							headless: true,
 							fields: [
-								{ id: "informedConsent", label: "Entry Under Informed Consent?", type: "boolean", options: ["Yes", "No"], value: "No", defaultSource: "Workbook F27: No", origin: "new", detail: "Defaults to No." },
-								{ id: "consentSignature", label: "Customer Signature", type: "signature", origin: "new", conditionText: "IF Entry Under Informed Consent? = Yes", showWhen: { field: "informedConsent", equals: "Yes" } }
+								{ id: "informedConsent", label: "Entry Under Informed Consent?", type: "boolean", options: ["Yes", "No"], value: "No", defaultSource: "Workbook F27: No", origin: "new", detail: "Defaults to No." }
+							],
+							sections: [
+								{
+									name: "Customer Signature",
+									headless: true,
+									conditionText: "IF Entry Under Informed Consent? = Yes",
+									showWhen: { field: "informedConsent", equals: "Yes" },
+									fields: [
+										{ id: "consentSignature", label: "Customer Signature", type: "signature", origin: "new" }
+									]
+								}
 							]
 						},
 						{
@@ -1569,26 +1581,28 @@ window.ENVINCIDENT_SURVEY = {
 							headless: true,
 							fields: [
 								{ id: "searchWarrant", label: "Entry Under Search warrant?", type: "boolean", options: ["Yes", "No"], value: "No", defaultSource: "Workbook F29: No", origin: "new", detail: "Defaults to No." }
-							]
-						},
-						{
-							name: "Search Warrant Shown to",
-							origin: "new",
-							conditionText: "IF Entry Under Search warrant? = Yes",
-							showWhen: { field: "searchWarrant", equals: "Yes" },
-							detail: "Information only. Does not become a linked contact.",
-							fields: [
-								{ id: "searchContact", label: "Search Warrant Shown to Name", type: "lookup", lookupOf: "Contact", origin: "new" },
+							],
+							sections: [
 								{
-									id: "searchName",
-									label: "Search Warrant Shown to Name",
-									type: "text",
+									name: "Search Warrant Shown to",
 									origin: "new",
-									conditionText: "IF the contact is not in the lookup",
-									showWhen: { field: "searchContact", filled: false }
-								},
-								{ id: "searchRelationship", label: "Search Warrant Shown to Relationship", type: "text", origin: "new" },
-								{ id: "searchSignature", label: "Customer Signature", type: "signature", origin: "new" }
+									conditionText: "IF Entry Under Search warrant? = Yes",
+									showWhen: { field: "searchWarrant", equals: "Yes" },
+									detail: "Information only. Does not become a linked contact.",
+									fields: [
+										{ id: "searchContact", label: "Search Warrant Shown to Name", type: "lookup", lookupOf: "Contact", origin: "new" },
+										{
+											id: "searchName",
+											label: "Search Warrant Shown to Name",
+											type: "text",
+											origin: "new",
+											conditionText: "IF the contact is not in the lookup",
+											showWhen: { field: "searchContact", filled: false }
+										},
+										{ id: "searchRelationship", label: "Search Warrant Shown to Relationship", type: "text", origin: "new" },
+										{ id: "searchSignature", label: "Customer Signature", type: "signature", origin: "new" }
+									]
+								}
 							]
 						}
 					]
@@ -1999,6 +2013,8 @@ window.ENVINCIDENT_SURVEY = {
 		},
 	]
 };
+
+
 
 
 
