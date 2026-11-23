@@ -1449,7 +1449,6 @@ window.ENVINCIDENT_SURVEY = {
 											conditionText: "IF Warrant Shown = Yes",
 											showWhen: { field: "warrantShown", equals: "Yes" },
 											origin: "new",
-											detail: "Select a contact or enter a name; both may be provided."
 										},
 										{ id: "warrantRelationship", showWhen: { field: "warrantShown", equals: "Yes" }, label: "Warrant Shown to Relationship", type: "text", origin: "new" }
 									]
@@ -1494,7 +1493,6 @@ window.ENVINCIDENT_SURVEY = {
 											conditionText: "IF Entry Under Search warrant? = Yes",
 											showWhen: { field: "searchWarrant", equals: "Yes" },
 											origin: "new",
-											detail: "Select a contact or enter a name; both may be provided.",
 										},
 										{ id: "searchRelationship", showWhen: { field: "searchWarrant", equals: "Yes" }, label: "Search Warrant Shown to Relationship", type: "text", origin: "new" },
 										{ id: "searchSignature", showWhen: { field: "searchWarrant", equals: "Yes" }, label: "Customer Signature", type: "signature", origin: "new" }
@@ -2690,9 +2688,6 @@ window.ENVINCIDENT_SURVEY = {
 			default: node = el("div", null, `[${field.type}]`);
 		}
 		wrap.appendChild(node);
-		if (["warrantName", "warrantRecipientName", "searchName"].includes(field.id) && field.type === "text") {
-			wrap.appendChild(el("p", "field-help", "Select a contact or enter a name. You can also provide both."));
-		}
 		wrap.appendChild(renderSpec(field));
 
 		const wide = ["textarea", "spatial", "media", "multiselect", "derived", "signature"].includes(field.type)
@@ -3184,7 +3179,7 @@ window.ENVINCIDENT_SURVEY = {
 		["warrantNameFree", "samplingWarrantContact"],
 		["searchName", "searchContact"]
 	];
-	const message = "Select a contact or enter a name. You can also provide both.";
+	const message = "Select a contact or enter a name.";
 
 	function clearError(field) {
 		field.querySelector(".warrant-validation-error")?.remove();
