@@ -1538,22 +1538,17 @@ window.ENVINCIDENT_SURVEY = {
 								{
 									name: "Warrant Shown to",
 									origin: "new",
-									conditionText: "IF Warrant Shown = Yes",
-									showWhen: { field: "warrantShown", equals: "Yes" },
 									detail: "Information only. Does not become a linked contact.",
 									fields: [
-										{ id: "warrantContact", label: "Warrant Shown to Name", type: "lookup", lookupOf: "Contact", mandatory: true, origin: "new" },
+										{ id: "warrantContact", showWhen: { field: "warrantShown", equals: "Yes" }, label: "Warrant Shown to Name", type: "lookup", lookupOf: "Contact", mandatory: true, origin: "new" },
 										{
 											id: "warrantName",
-											label: "Warrant Shown to Name",
+											label: "Warrant Shown to Name (if contact is not found)",
 											type: "text",
-											mandatory: true,
 											origin: "new",
-											conditionText: "IF the contact is not in the lookup",
-											showWhen: { field: "warrantContact", filled: false },
-											detail: "Shown only when the officer cannot find the person in the contact list."
+											detail: "Enter the name if the person cannot be found in the contact list."
 										},
-										{ id: "warrantRelationship", label: "Warrant Shown to Relationship", type: "text", origin: "new" }
+										{ id: "warrantRelationship", showWhen: { field: "warrantShown", equals: "Yes" }, label: "Warrant Shown to Relationship", type: "text", origin: "new" }
 									]
 								}
 							]
@@ -1586,21 +1581,17 @@ window.ENVINCIDENT_SURVEY = {
 								{
 									name: "Search Warrant Shown to",
 									origin: "new",
-									conditionText: "IF Entry Under Search warrant? = Yes",
-									showWhen: { field: "searchWarrant", equals: "Yes" },
 									detail: "Information only. Does not become a linked contact.",
 									fields: [
-										{ id: "searchContact", label: "Search Warrant Shown to Name", type: "lookup", lookupOf: "Contact", origin: "new" },
+										{ id: "searchContact", showWhen: { field: "searchWarrant", equals: "Yes" }, label: "Search Warrant Shown to Name", type: "lookup", lookupOf: "Contact", origin: "new" },
 										{
 											id: "searchName",
-											label: "Search Warrant Shown to Name",
+											label: "Search Warrant Shown to Name (if contact is not found)",
 											type: "text",
 											origin: "new",
-											conditionText: "IF the contact is not in the lookup",
-											showWhen: { field: "searchContact", filled: false }
 										},
-										{ id: "searchRelationship", label: "Search Warrant Shown to Relationship", type: "text", origin: "new" },
-										{ id: "searchSignature", label: "Customer Signature", type: "signature", origin: "new" }
+										{ id: "searchRelationship", showWhen: { field: "searchWarrant", equals: "Yes" }, label: "Search Warrant Shown to Relationship", type: "text", origin: "new" },
+										{ id: "searchSignature", showWhen: { field: "searchWarrant", equals: "Yes" }, label: "Customer Signature", type: "signature", origin: "new" }
 									]
 								}
 							]
