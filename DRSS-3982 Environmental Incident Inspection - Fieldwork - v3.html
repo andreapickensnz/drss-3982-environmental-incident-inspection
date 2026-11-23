@@ -1444,7 +1444,7 @@ window.ENVINCIDENT_SURVEY = {
 										{ id: "warrantContact", showWhen: { field: "warrantShown", equals: "Yes" }, label: "Warrant Shown to Name", type: "lookup", lookupOf: "Contact", origin: "new" },
 										{
 											id: "warrantName",
-											label: "Warrant Shown to Name (if contact is not found)",
+											label: "Warrant Shown to Name (enter a name if contact is not found)",
 											type: "text",
 											conditionText: "IF Warrant Shown = Yes",
 											showWhen: { field: "warrantShown", equals: "Yes" },
@@ -1488,7 +1488,7 @@ window.ENVINCIDENT_SURVEY = {
 										{ id: "searchContact", showWhen: { field: "searchWarrant", equals: "Yes" }, label: "Search Warrant Shown to Name", type: "lookup", lookupOf: "Contact", origin: "new" },
 										{
 											id: "searchName",
-											label: "Search Warrant Shown to Name (if contact is not found)",
+											label: "Search Warrant Shown to Name (enter a name if contact is not found)",
 											type: "text",
 											conditionText: "IF Entry Under Search warrant? = Yes",
 											showWhen: { field: "searchWarrant", equals: "Yes" },
